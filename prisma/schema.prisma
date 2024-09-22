@@ -1,0 +1,90 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id_user Int @id @default(autoincrement())
+  nama_user String @db.VarChar(100)
+  foto String @db.Text
+  email String @unique @db.VarChar(100)
+  password String @db.Text
+  role Role @default(TAMU)
+
+  Pemesanan Pemesanan[]
+}
+
+
+model Kamar {
+  id_kamar Int @id @default(autoincrement())
+  nomor_kamar Int @unique
+  id_tipe_kamar Int @unique
+
+  detail_pemesanan Detail_pemesanan []
+  Tipe_kamar Tipe_kamar @relation(fields: [id_tipe_kamar], references: [id_tipe_kamar])
+}
+
+model Tipe_kamar {
+  id_tipe_kamar Int @id @default(autoincrement())
+  nama_tipe_kamar String @db.VarChar(100)
+  harga Int @db.Int
+  deskripsi String @db.Text
+  foto String @db.Text
+
+  pemesanan Pemesanan[]
+  kamar Kamar[]
+
+}
+
+model Detail_pemesanan {
+  id_detail_pemesanan Int @id @default(autoincrement())
+  id_pemesanan Int @unique
+  id_kamar Int 
+  tgl_akses DateTime @db.Date
+  harga Int @db.Int
+
+  Kamar Kamar @relation(fields: [id_kamar], references: [id_kamar])
+  pemesanan Pemesanan @relation(fields: [id_pemesanan], references: [id_pemesanan])
+}
+
+model Pemesanan {
+  id_pemesanan Int @id @default(autoincrement())
+  nomor_pemesanan Int @unique @db.Int
+  nama_pemesanan String @db.VarChar(100)
+  email_pemesanan String @unique @db.VarChar(100)
+  tgl_pemesanan DateTime @db.Timestamp()
+  tgl_check_in DateTime @db.Date
+  tgl_check_out DateTime @db.Date
+  nama_tamu String @db.VarChar(100)
+  jumlah_kamar Int @db.Int
+  id_tipe_kamar Int 
+  status_pemesanan status_pemesanan @default(BARU)
+  id_user Int 
+
+  user User @relation(fields: [id_user], references: [id_user])
+  tipe_kamar Tipe_kamar @relation(fields: [id_tipe_kamar], references: [id_tipe_kamar])
+
+  Detail_pemesanan Detail_pemesanan?
+}
+
+enum status_pemesanan {
+  BARU
+  CHECK_IN
+  CHECK_OUT
+}
+
+enum Role {
+  ADMIN
+  RESEPSIONIS
+  TAMU
+}
