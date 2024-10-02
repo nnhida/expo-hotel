@@ -1,38 +1,30 @@
+'use server';
+
 import { PrismaClient } from "@prisma/client";
 import { timeStamp } from "console";
-import { writeFile } from "fs";
+import {  writeFileSync } from "fs";
+import { writeFile } from "fs/promises";
+import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 import path, { join } from "path";
 
 const prisma = new PrismaClient();
 
-export async function GET() {
-  try {
-    const allTipeKamar = await prisma.tipe_kamar.findMany();
+export async function getTipeKamar() {
+  try{
+    const data = await prisma.tipe_kamar.findMany();
 
-    if (allTipeKamar.length == 0) {
-      return NextResponse.json({
-        success: true,
-        message: "no tipe kamar",
-        data: allTipeKamar,
-      });
-    }
-    return NextResponse.json({
-      success: true,
-      message: "all tipe kamar loaded",
-      data: allTipeKamar,
-    });
+  await prisma.$disconnect()
+  return data;
   } catch (err) {
-    return NextResponse.json({
-      succes: false,
-      message: "error loading tipe kamar: " + err,
-    });
+    console.log('this is error :' +err )
+    await prisma.$disconnect
+    process.exit(1)
   }
 }
 
-export async function POST(req: NextRequest) {
+export async function addTipeKamar(formData: FormData) {
   try {
-    const formData = await req.formData();
 
     const nama_tipe_kamar = String(formData.get("nama_tipe_kamar"));
     const harga = Number(formData.get("harga"));
@@ -46,14 +38,11 @@ export async function POST(req: NextRequest) {
       const buffer = Buffer.from(bytes);
   
       const foto = join(`image-${Date.now()}${path.extname(file.name)}`); //success beacause type is file
-      writeFile(`./public/upload/tipe_kamar/${foto}`, buffer, (err) => {
-        if (err) console.log("the error is " + err);
+      writeFile(`./public/upload/tipe_kamar/${foto}`, buffer)
         console.log("The file has been saved!");
-      });
+      ;
 
-
-
-    const newTipeKamar = await prisma.tipe_kamar.create({
+    await prisma.tipe_kamar.create({
       data: {
         nama_tipe_kamar: nama_tipe_kamar,
         harga: harga,
@@ -62,19 +51,71 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    if (newTipeKamar) {
-      return NextResponse.json({
-        success: true,
-        message: "new tipe kamar added",
-        data: newTipeKamar,
-      });
-    } else {
-      console.error();
-    }
+    revalidatePath('/','page')
+
   } catch (err) {
-    return NextResponse.json({
-      succes: false,
-      message: "there is error : " + err,
-    });
+   console.log('this is error '+err)
+  }
+}
+
+export async function editTipeKamar(formData: FormData) {
+  try {
+
+    const id_tipe_kamar = Number(formData.get('id_tipe_kamar'))
+    const nama_tipe_kamar = String(formData.get("nama_tipe_kamar"))
+    const harga =  Number(formData.get("harga"))
+    const foto = formData.get("foto")
+    const deskripsi = String(formData.get("deskripsi"))
+
+    let filename =undefined
+
+    console.log(foto)
+
+    if (foto.size !== 0) {
+
+      const buffer = await foto.arrayBuffer();
+      const view = new Uint8Array(buffer)
+
+      const name = `image-${Date.now()}${path.extname(foto?.name)}`;
+
+
+      try{
+         await writeFile(`./public/upload/tipe_kamar/${name}`, view);
+        console.log('file has been saved! in ./public/upload/tipe_kamar/ '+ name)
+      } catch (err) {
+        console.log('this is error upload file :' + err)
+      }
+      filename = name
+    }
+
+    await prisma.tipe_kamar.update({
+        where: { id_tipe_kamar: id_tipe_kamar },
+        data: {
+          nama_tipe_kamar : nama_tipe_kamar,
+          foto: filename, 
+          harga : harga,
+          deskripsi : deskripsi
+
+        },
+      })
+
+
+      revalidatePath('/kelola/user', 'page')
+
+  } catch (err) {
+    console.log('this is error ' +err)
+  }
+}
+
+export async function deleteTipeKamar(id_tipe_kamar: number) {
+  try{
+    await prisma.tipe_kamar.delete({
+      where: {id_tipe_kamar : id_tipe_kamar}
+    })
+  
+    return;
+  } catch (err) {
+    console.log('there is error '+err)
+
   }
 }

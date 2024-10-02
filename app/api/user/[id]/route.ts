@@ -1,12 +1,15 @@
+'use server';
+
 import { PrismaClient } from "@prisma/client";
-import { NextRequest, NextResponse } from "next/server";
 import { writeFile } from "fs";
+import { revalidatePath } from "next/cache";
+import { NextRequest, NextResponse } from "next/server";
 import path, { join } from "path";
 
 const prisma = new PrismaClient();
 
 //findUser
-export async function GET(req: NextRequest) {
+export async function findUser(req: NextRequest) {
   const urlParts = req.url.split("/");
   const id = urlParts[urlParts.length - 1];
   const userId = Number(id);
@@ -43,27 +46,26 @@ export async function GET(req: NextRequest) {
   }
 }
 
-//editUser
-export async function PUT(req: NextRequest) {
-  const urlParts = req.url.split("/");
-  const id = urlParts[urlParts.length - 1];
-  try {
-    const userId = Number(id);
-    const formData = await req.formData();
 
+
+//editUser
+export async function editUser(formData: FormData) {
+  try {
+    const id_user = Number(formData.get('id_user'))
     const nama_user = String(formData.get("nama_user") )|| undefined
     const email =  String(formData.get("email")) || undefined
     const foto = formData.get("foto") || undefined
     const password = String(formData.get("password")) || undefined
 
-    let filename : any = ''
+    let filename = undefined
+    console.log(email)
 
     if (foto) {
       const bytes = await foto.arrayBuffer();
       const buffer = Buffer.from(bytes);
 
       const name = `image-${Date.now()}${path.extname(foto.name)}`; // Use path.extname correctly
-      writeFile(`./public/upload/${foto}`, buffer, (err) => {
+      writeFile(`./public/upload/user/${name}`, buffer, (err) => {
         if (err) console.log("The error is " + err);
         console.log("The file has been saved!");
       });
@@ -71,8 +73,8 @@ export async function PUT(req: NextRequest) {
       filename = name
     }
 
-    const updatedUser = await prisma.user.update({
-        where: { id_user: userId },
+    const data = await prisma.user.update({
+        where: { id_user: id_user },
         data: {
           nama_user : nama_user,
           foto: filename, 
@@ -82,44 +84,29 @@ export async function PUT(req: NextRequest) {
         },
       })
 
-        return NextResponse.json({
-          success: true,
-          message: "User updated",
-          data: updatedUser,
-        });
+      await prisma.$disconnect()
 
+      revalidatePath('/', 'layout')
+
+      return NextResponse.json({
+        success: true,
+        message: 'update success',
+        data: data
+      })
   } catch (err) {
-    return NextResponse.json(
-      {
-        success: false,
-        message: "There is an error: " + err,
-      },
-      { status: 500 }
-    );
+    await prisma.$disconnect()
+    return NextResponse.json({
+      success: true,
+      message: 'this is error :' + err
+    })
   }
 }
 
 //deleteuser
-export async function DELETE(req: NextRequest) {
-  const urlParts = req.url.split("/");
-  const id = urlParts[urlParts.length - 1];
-  const userId = Number(id)
+export async function deleteUser(id:number) {
 
-  try{
-    const deleteUser = await prisma.user.delete({
-      where: {id_user : userId}
+  await prisma.user.delete({
+      where: {id_user : id}
     })
   
-    return NextResponse.json({
-      success: true,
-      message: 'user on id ' + userId + ' has been deleted',
-      data: deleteUser
-    })
-  } catch (err) {
-    return NextResponse.json({
-      success: false,
-      message: 'there is error : '+ err
-    })
-
-  }
 }

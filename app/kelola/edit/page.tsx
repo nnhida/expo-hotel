@@ -1,0 +1,12 @@
+import EditUser from '@/app/component/editUser'
+import { getSession } from '@/lib/auth'
+import React from 'react'
+
+export default async function page() {
+
+  const session = await getSession()
+  const data = session?.data
+  return (
+    <EditUser user={data}/>
+  )
+}

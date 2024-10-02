@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
+import { AppProgressBar } from "next-nprogress-bar";
 import localFont from "next/font/local";
 import "./globals.css";
+import Footer from "./navigation/footer/footer";
+import Navbar from "./navigation/navbar/navbar";
+import ProgressBar from "./component/ProgressBar";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -28,7 +32,10 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <Navbar />
         {children}
+        <ProgressBar />
+        <Footer />
       </body>
     </html>
   );

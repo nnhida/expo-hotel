@@ -1,98 +1,156 @@
-import { PrismaClient } from "@prisma/client";
+"use server";
+
+import { createSession, deleteSession, encrypt } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 import { writeFile } from "fs";
+import { request } from "https";
+import { revalidatePath } from "next/cache";
+import { NextURL } from "next/dist/server/web/next-url";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+
 import { NextRequest, NextResponse } from "next/server";
 import path, { join } from "path";
+import React from "react";
 
-const prisma = new PrismaClient();
-
-export async function GET() {
-  try {
-    const allUser = await prisma.user.findMany();
-
-    if (allUser.length == 0) {
-      return NextResponse.json({
-        success: true,
-        message: "no member",
-        data: allUser,
-      });
-    }
-    return NextResponse.json({
-      success: true,
-      message: "all member loaded",
-      data: allUser,
-    });
-  } catch (err) {
-    return NextResponse.json({
-      succes: false,
-      message: "error loading member: " + err,
-    });
-  }
+export async function getAll() {
+  revalidatePath("/","layout")
+  return await prisma.user.findMany();
 }
 
-export async function POST(req: NextRequest) {
-  try {
-    const formData = await req.formData();
+export async function countUser() {
+  const total = await prisma.user.count()
+  const admin = await prisma.user.count({where: {role: 'ADMIN'}})
+  const staff = await prisma.user.count({where: {role: 'RESEPSIONIS'}})
+  const tamu = await prisma.user.count({where: {role: 'TAMU'}})
 
-    // const nama_user = formData.get('nama_user')
-    // const foto = formData.get('foto')
-    // const email = formData.get('email')
-    // const password = formData.get('password')
-    //
+  return {total,admin,staff,tamu}
+}
+
+export async function login(formData: FormData) {
+  
+    const email = String(formData.get("email"));
+  const password = String(formData.get("password"));
+
+  const findUser = await prisma.user.findUnique({
+    where: { email: email },
+  });
+  if (!findUser) {
+     return NextResponse.json({success: false, message: 'akun tidak ditemukan'})
+  } else if (findUser) {
+    if (email === findUser.email && password === findUser.password) {
+      const session = await encrypt({ findUser});
+
+      createSession(findUser)
+
+      if (findUser.role === 'ADMIN' || findUser.role === 'RESEPSIONIS') {
+        redirect('/kelola')
+      }  else {
+        redirect('/home')
+      }
+    } else {
+        
+        return NextResponse.json({success: false, message: 'email/ password salah'})
+    }
+  }
+
+}
+
+export async function logout() {
+    await deleteSession()
+    redirect('/login')
+}
+
+export async function register(formData: FormData) {
     const nama_user = String(formData.get("nama_user"));
     const email = String(formData.get("email"));
-    const file = formData.get("foto");
     const password = String(formData.get("password"));
-    const role = String(formData.get("role")|| "TAMU") ;
+    const role = String(formData.get("role") || "TAMU");
 
     const validRoles = ["RESEPSIONIS", "ADMIN", "TAMU"];
 
-    console.log(role)
-
-      if (!validRoles.includes(role)) {
-        return NextResponse.json(
-          {
-            success: false,
-            message: "role off limit",
-          },
-          { status: 400 }
-        );
-      }
-
-    if (!file) {
-      return NextResponse.json({ success: false, message: "no file" });
+    if (!validRoles.includes(role)) {
+      console.log('role off limit')
     }
-    const bytes = await file.arrayBuffer(); //success baecause type is file
-    const buffer = Buffer.from(bytes);
 
-    const foto = join(`image-${Date.now()}${path.extname(file.name)}`); //success beacause type is file
-    writeFile(`./public/upload/user/${foto}`, buffer, (err) => {
-      if (err) console.log("the error is " + err);
-      console.log("The file has been saved!");
+    const filterEmail = await prisma.user.findUnique({
+      where: { email: email },
     });
+    if (filterEmail) {
+      console.log('email terpakai')
+    }
 
-    const newUser = await prisma.user.create({
+
+    const data = {nama_user,email, password, role}
+
+    await prisma.user.create({
       data: {
-        nama_user: nama_user,
-        email: email,
-        foto: foto,
-        password: password,
+        nama_user,
+        email,
+        foto: undefined,
+        password,
         role: role as any,
       },
     });
 
-    if (newUser) {
-      return NextResponse.json({
-        success: true,
-        message: "new user added",
-        data: newUser,
-      });
-    } else {
-      console.error();
+    createSession(data)
+    redirect('/')
+
+}
+
+export async function addUser(formData: FormData) {
+  try {
+    const nama_user = String(formData.get("nama_user"));
+    const email = String(formData.get("email"));
+    const file = formData.get("foto") || undefined; // Fetch the file
+    const password = String(formData.get("password"));
+    const role = String(formData.get("role") || "TAMU");
+
+    const validRoles = ["RESEPSIONIS", "ADMIN", "TAMU"];
+
+    if (!validRoles.includes(role)) {
+      console.log('Role off limit');
     }
-  } catch (err) {
-    return NextResponse.json({
-      succes: false,
-      message: "there is error : " + err,
+
+    let filename // Initialize filename
+
+    // Check if file exists and is an instance of File
+    if (file.size !== 0) {
+      const bytes = await file.arrayBuffer();
+      const buffer = Buffer.from(bytes);
+  
+      const foto = `image-${Date.now()}${path.extname(file.name)}`;
+      await writeFile(`./public/upload/user/${foto}`, buffer, (err) => {
+        if (err) console.log("The error is " + err);
+        console.log("The file has been saved!");
+      });
+      filename = foto; // Set filename to the saved file name
+    } else {
+      // If no file, ensure filename is undefined
+      filename = undefined;
+    }
+
+    const filterEmail = await prisma.user.findUnique({
+      where: { email: email },
     });
+    if (filterEmail) {
+      console.log('Email already in use');
+      return; // Exit if email is already taken
+    }
+
+    console.log('Filename is ' + filename);
+
+    // Create user in the database
+    await prisma.user.create({
+      data: {
+        nama_user,
+        email,
+        foto: filename,
+        password,
+        role: role as any,
+      },
+    });
+  } catch (err) {
+    console.log('This is an error: ' + err);
   }
 }
