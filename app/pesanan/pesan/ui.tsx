@@ -21,7 +21,7 @@ export default function Ui({ dataTipeKamar, dataKamar }: pesanProps) {
     const [id_tipe_kamar, setId_tipe_kamar] = useState('')
     const [tgl_check_in, setTgl_check_in] = useState<string>('')
     const [Tgl_check_out, setTgl_check_out] = useState<string>('')
-    const [kamarPesan, setKamarPesan] = useState<Array<number>>()
+    const [kamarPesan, setKamarPesan] = useState<Array<number> | undefined>()
 
 
 
@@ -44,7 +44,6 @@ export default function Ui({ dataTipeKamar, dataKamar }: pesanProps) {
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault()
-        console.log("niga")
         const formData = new FormData();
 
         alert('success')
@@ -80,6 +79,17 @@ export default function Ui({ dataTipeKamar, dataKamar }: pesanProps) {
 
     }, [])
 
+    useEffect(() => {
+        const fetchKamarAvail = async () => {
+            setKamarPesan([])
+          if (tgl_check_in && Tgl_check_out) {
+            const available = await kamarAvailable(id_tipe_kamar, tgl_check_in, Tgl_check_out);
+            setKamarAvail(available);
+          }
+        };
+        fetchKamarAvail();
+      }, [tgl_check_in, Tgl_check_out, id_tipe_kamar]);
+
     return (
         <div className='pt-28 p-10 flex flex-col items-center space-y-5'>
             <div className='w-1/2'>
@@ -98,8 +108,7 @@ export default function Ui({ dataTipeKamar, dataKamar }: pesanProps) {
 
                 <div className='flex flex-col space-y-5'>
                     <select name='id_tipe_kamar' value={id_tipe_kamar} onChange={async (e) => {
-                        await setId_tipe_kamar(e.target.value)
-                        setKamarAvail(await kamarAvailable(id_tipe_kamar, tgl_check_in, Tgl_check_out))
+                        setId_tipe_kamar(e.target.value);
                     }}>
                         <option>Pilih Tipe Kamar</option>
                         {tipekamar?.map((item) => (
@@ -108,17 +117,15 @@ export default function Ui({ dataTipeKamar, dataKamar }: pesanProps) {
                     </select>
                     <input type='date' name='tgl_check_in' value={tgl_check_in} onChange={async (e) => {
                         setTgl_check_in(e.target.value)
-                        setKamarAvail(await kamarAvailable(id_tipe_kamar, tgl_check_in, Tgl_check_out))
                     }} />
                     <input type='date' name='tgl_check_out' value={Tgl_check_out} onChange={async (e) => {
                         setTgl_check_out(e.target.value)
-                        setKamarAvail(await kamarAvailable(id_tipe_kamar, tgl_check_in, Tgl_check_out))
                     }} />
 
                     <div className='grid gap-5 grid-cols-5'>
                         {kamar?.map((item) => (
                             <div>
-                                <input id={JSON.stringify(item.id_kamar)} name='id_kamar' type='checkbox' onChange={() => submitKamar(item.id_kamar)} className='hidden peer' disabled={kamarAvail?.includes(item.id_kamar!) || item.id_tipe_kamar !== Number(id_tipe_kamar)} />
+                                <input id={JSON.stringify(item.id_kamar)} name='id_kamar' type='checkbox' onChange={() => submitKamar(item.id_kamar)} className='hidden peer' checked={kamarPesan?.includes(Number(item.id_kamar))} disabled={kamarAvail?.includes(item.id_kamar!) || item.id_tipe_kamar !== Number(id_tipe_kamar)} />
                                 <label htmlFor={JSON.stringify(item.id_kamar)} className={` py-2 px-3 rounded-lg peer-disabled:opacity-50 peer-checked:bg-green-400 peer-checked:shadow-2xl peer-checked:text-white bg-white font-semibold hover:cursor-pointer transition-all`}>{item.nomor_kamar}</label>
                             </div>
                         ))}

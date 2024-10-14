@@ -8,6 +8,6 @@ export default async function page() {
     const kamar = await getKamar()
     const tipeKamar = await getTipeKamar()
   return (
-    <Ui dataKamar={kamar} dataTipekamar={tipeKamar}/>
+    <Ui kamar={kamar} tipekamar={tipeKamar}/>
   )
 }

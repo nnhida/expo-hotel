@@ -91,7 +91,7 @@ export default function Ui({ pemesanan, detail, kamar, tipeKamar }: detailProps)
                     </div>
                     <div className='flex flex-col items-center'>
                         <p className=' font-bold text-2xl'>Hotel Wikusama</p>
-                        <p>{pemesanan?.nomor_pemesanan}</p>
+                        <p>No. {pemesanan?.nomor_pemesanan}</p>
                     </div>
 
                     <p className='text-3xl'>RP.{totalHarga().toLocaleString("id-ID", { currency: "IDR" })}</p>

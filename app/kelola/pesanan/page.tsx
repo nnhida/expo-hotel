@@ -7,6 +7,6 @@ export default async function page() {
   const data = await getPesanan()
 
   return (
-    <Ui dataPesanan={data}/>
+    <Ui data={data}/>
   )
 }

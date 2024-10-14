@@ -9,7 +9,7 @@ export default async function page() {
     const dataUser = await getAll()
 
   return (
-    <Ui dataUser={dataUser}/>
+    <Ui user={dataUser}/>
   )
 }
 

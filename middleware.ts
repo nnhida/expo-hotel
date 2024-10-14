@@ -36,6 +36,17 @@ export async function middleware(req: NextRequest , sessionStorage: Storage) {
  
   return NextResponse.next()
 }
+
+export function loginPage(req:NextRequest) {
+  const { pathname } = req.nextUrl;
+
+  // Redirect if trying to access protected routes without a session
+  if (pathname === '/login') {
+      return NextResponse.next(); // Allow access to the login page
+  }
+
+  // Additional checks for other routes can be added here
+}
  
 // Routes Middleware should not run on
 export const config = {

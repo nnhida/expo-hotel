@@ -10,7 +10,7 @@ interface tipekamarprops{
 
 export default function Ui({dataTipeKamar}:tipekamarprops) {
 
-  const [tipeKamar, setTipeKamar] = useState<any>()
+  const [tipeKamar, setTipeKamar] = useState<ITipekamar[]>()
 
 
   useEffect(() => {
@@ -32,7 +32,7 @@ export default function Ui({dataTipeKamar}:tipekamarprops) {
   return (
     <div className='pt-28 p-10 flex flex-col space-y-5'>
         <p className='text-4xl font-bold text-center text-blue-500'>Tipe Kamar</p>
-        {tipeKamar?.map((item: ITipekamar) => (
+        {tipeKamar?.map((item) => (
           <RowRoom nama_tipe_kamar={item.nama_tipe_kamar} harga={item.harga} deskripsi={item.deskripsi} foto={item.foto} />
         ))}
     </div>

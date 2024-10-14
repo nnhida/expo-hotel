@@ -2,7 +2,7 @@ import {useRouter} from 'next/navigation'
 import React from 'react'
 interface rowRoomProps{
   nama_tipe_kamar: string,
-  harga: string,
+  harga: number,
   foto: string,
   deskripsi: string,
 

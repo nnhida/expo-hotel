@@ -26,53 +26,57 @@ export async function getTipeKamar() {
 export async function addTipeKamar(formData: FormData) {
   try {
 
-    const nama_tipe_kamar = String(formData.get("nama_tipe_kamar"));
+    const nama_tipe_kamar = formData.get("nama_tipe_kamar");
     const harga = Number(formData.get("harga"));
-    const deskripsi = String(formData.get("deskripsi"));
+    const deskripsi = formData.get("deskripsi");
     const file = formData.get("foto");
 
-    if (!file) {
-        return NextResponse.json({ success: false, message: "no file" });
-      }
-      const bytes = await file.arrayBuffer(); //success baecause type is file
-      const buffer = Buffer.from(bytes);
-  
-      const foto = join(`image-${Date.now()}${path.extname(file.name)}`); //success beacause type is file
-      writeFile(`./public/upload/tipe_kamar/${foto}`, buffer)
-        console.log("The file has been saved!");
-      ;
 
-    await prisma.tipe_kamar.create({
+    let filename = undefined
+    if (file) {
+        const bytes = await file.arrayBuffer(); //success baecause type is file
+        const buffer = Buffer.from(bytes);
+    
+        const foto = join(`image-${Date.now()}${path.extname(file.name)}`); //success beacause type is file
+        writeFile(`./public/upload/tipe_kamar/${foto}`, buffer)
+        console.log("The file has been saved!");
+
+        filename = foto
+      }
+      
+
+    const data = await prisma.tipe_kamar.create({
       data: {
-        nama_tipe_kamar: nama_tipe_kamar,
-        harga: harga,
-        deskripsi: deskripsi,
-        foto : foto
+        nama_tipe_kamar,
+        harga,
+        deskripsi,
+        foto : filename
       },
     });
 
     revalidatePath('/','page')
+    await prisma.$disconnect();
+    return data;
 
   } catch (err) {
    console.log('this is error '+err)
+   await prisma.$disconnect();
   }
 }
 
 export async function editTipeKamar(formData: FormData) {
   try {
-
     const id_tipe_kamar = Number(formData.get('id_tipe_kamar'))
-    const nama_tipe_kamar = String(formData.get("nama_tipe_kamar"))
-    const harga =  Number(formData.get("harga"))
-    const foto = formData.get("foto")
-    const deskripsi = String(formData.get("deskripsi"))
+    const nama_tipe_kamar = formData.get("nama_tipe_kamar") || undefined 
+    const harga =  formData.get("harga")? Number(formData.get("harga")): undefined
+    const foto = formData.get("foto") || undefined
+    const deskripsi = formData.get("deskripsi") || undefined
 
-    let filename =undefined
+    let filename = undefined
 
     console.log(foto)
 
-    if (foto.size !== 0) {
-
+    if (foto) {
       const buffer = await foto.arrayBuffer();
       const view = new Uint8Array(buffer)
 
@@ -88,7 +92,7 @@ export async function editTipeKamar(formData: FormData) {
       filename = name
     }
 
-    await prisma.tipe_kamar.update({
+     const data = await prisma.tipe_kamar.update({
         where: { id_tipe_kamar: id_tipe_kamar },
         data: {
           nama_tipe_kamar : nama_tipe_kamar,
@@ -100,22 +104,42 @@ export async function editTipeKamar(formData: FormData) {
       })
 
 
-      revalidatePath('/kelola/user', 'page')
+      revalidatePath('/', 'layout')
+      await prisma.$disconnect()
+      return data;
 
   } catch (err) {
     console.log('this is error ' +err)
+    await prisma.$disconnect();
   }
 }
 
 export async function deleteTipeKamar(id_tipe_kamar: number) {
   try{
-    await prisma.tipe_kamar.delete({
+    const data = await prisma.tipe_kamar.delete({
       where: {id_tipe_kamar : id_tipe_kamar}
     })
-  
-    return;
+
+    revalidatePath('/','layout')
+    await prisma.$disconnect();
+    return data;
   } catch (err) {
     console.log('there is error '+err)
 
+  }
+}
+
+export async function getTipeKamarId(id: number) {
+  try {
+    
+    const data = await prisma.tipe_kamar.findUnique({
+        where: { id_tipe_kamar: id },
+      })
+     revalidatePath('/' , 'layout');
+    await prisma.$disconnect();
+    return data;
+  } catch (err) {
+    console.log('this is error: '+err)
+    await prisma.$disconnect();
   }
 }

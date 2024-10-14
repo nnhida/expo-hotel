@@ -6,20 +6,17 @@ import { FaPlus, FaTrash } from 'react-icons/fa6';
 import { FaPenAlt } from 'react-icons/fa';
 import { MdCancel } from 'react-icons/md';
 import { addKamar, deleteKamar, editKamar } from '@/app/api/kamar/routes';
-import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { addTipeKamar, deleteTipeKamar, editTipeKamar } from '@/app/api/kamar/tipe_kamar/route';
 
 interface kamarProps {
-    dataKamar: any,
-    dataTipekamar: any
+    kamar: IKamar[],
+    tipekamar: ITipekamar[]
 }
 
-export default function Ui({ dataKamar, dataTipekamar }: kamarProps) {
+export default function Ui({ kamar, tipekamar }: kamarProps) {
 
 
-    const [kamar, setKamar] = useState<IKamar[]>()
-    const [tipekamar, setTipeKamar] = useState<ITipekamar[]>()
 
     const [open, setOpen] = useState(false)
     const [tabel, settabel] = useState('kamar')
@@ -27,7 +24,6 @@ export default function Ui({ dataKamar, dataTipekamar }: kamarProps) {
 
     const [id_kamar, setId_kamar] = useState('')
     const [nomor_kamar, setNomorKamar] = useState('')
-    const [id_tipe_kamar_kamar, setId_tipe_Kamar_kamar] = useState('')
 
     const [id_tipe_kamar, setId_tipe_kamar] = useState('')
     const [nama_tipe_kamar, setNama_tipe_kamar] = useState('')
@@ -42,7 +38,8 @@ export default function Ui({ dataKamar, dataTipekamar }: kamarProps) {
         if (tabel === 'kamar') {
             setId_kamar(id_kamar)
             setNomorKamar(nomor_kamar)
-            setId_tipe_Kamar_kamar(id_tipe_kamar)
+            setId_tipe_kamar(id_tipe_kamar)
+
         } else if (tabel === 'tipe_kamar') {
             setId_tipe_kamar(id_tipe_kamar)
             setNama_tipe_kamar(nama_tipe_kamar)
@@ -57,7 +54,7 @@ export default function Ui({ dataKamar, dataTipekamar }: kamarProps) {
         if (tabel === 'kamar') {
             setId_kamar('')
             setNomorKamar('')
-            setId_tipe_Kamar_kamar('')
+            setId_tipe_kamar('')
         } else if (tabel === 'tipe_kamar') {
             setId_tipe_kamar('')
             setNama_tipe_kamar('')
@@ -68,35 +65,47 @@ export default function Ui({ dataKamar, dataTipekamar }: kamarProps) {
         setSubmit('add')
     }
 
-    const router = useRouter()
+
     const handleSubmit = async (e: any) => {
         e.preventDefault();
-
-
         const formData = new FormData();
 
-        const blob = new Blob([foto], {type: foto?.type})
-
         if (tabel == 'kamar') {
-            formData.append('id_kamar', id_kamar)
-            formData.append('nomor_kamar', nomor_kamar)
-            formData.append('id_tipe_kamar', id_tipe_kamar_kamar)
+            if(id_kamar){
+                formData.append('id_kamar', id_kamar)
+            }
+            if(nomor_kamar){
+                formData.append('nomor_kamar', nomor_kamar)
+            }
+            if(id_tipe_kamar){
+                formData.append('id_tipe_kamar', id_tipe_kamar)
+            }
 
             if (submit === 'add') {
                 await addKamar(formData)
             } else if (submit == 'edit') {
                 await editKamar(formData)
             }
-        } else {
-            formData.append('id_tipe_kamar', id_tipe_kamar)
-            formData.append('nama_tipe_kamar', nama_tipe_kamar)
-            formData.append('deskripsi', deskripsi)
-            formData.append('harga', harga)
-            formData.append('foto', foto!)
+
+        } else if(tabel == 'tipe_kamar') {
+            if (id_tipe_kamar) {
+                formData.append('id_tipe_kamar', id_tipe_kamar)      
+            }
+            if (nama_tipe_kamar) {
+                formData.append('nama_tipe_kamar', nama_tipe_kamar)
+            }
+            if (deskripsi) {
+                formData.append('deskripsi', deskripsi)      
+            }
+            if (harga) {
+                formData.append('harga', harga)      
+            }
+            if (foto) {
+                formData.append('foto', foto)      
+            }
 
             if (submit === 'add') {
                 await addTipeKamar(formData)
-                router.refresh()
             } else if (submit == 'edit') {
                 await editTipeKamar(formData)
             }
@@ -124,14 +133,6 @@ export default function Ui({ dataKamar, dataTipekamar }: kamarProps) {
         }
     }
 
-    useEffect(() => {
-        function fetch() {
-            setKamar(dataKamar)
-            setTipeKamar(dataTipekamar)
-        }
-
-        fetch()
-    }, [])
 
     return (
         <div>
@@ -286,8 +287,8 @@ export default function Ui({ dataKamar, dataTipekamar }: kamarProps) {
                                 <select
                                     name="id_tipe_kamar"
                                     className="focus:outline-blue-500  rounded-lg py-1 pl-3"
-                                    value={id_tipe_kamar_kamar}
-                                    onChange={(e) => setId_tipe_Kamar_kamar(e.target.value)}
+                                    value={id_tipe_kamar}
+                                    onChange={(e) => setId_tipe_kamar(e.target.value)}
                                     required
                                 >
                                     <option value="">~~PILIH TIPE KAMAR~~</option>

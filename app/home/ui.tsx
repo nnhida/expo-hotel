@@ -78,30 +78,6 @@ export default function Ui({ dataTipeKamar }: homeProps) {
                 </div>
             </div>
 
-            <div className=" absolute -bottom-5 flex justify-center w-full">
-                <form className="flex bg-white shadow-lg rounded-md overflow-hidden  ">
-                    <div className="border-r-2 px-4 my-4">
-                        <p className="font-bold">Tipe Kamar</p>
-                        <select className="focus:outline-none hover:cursor-pointer">
-                            <option>Standar</option>
-                            <option>Deluxe</option>
-                        </select>
-                    </div>
-                    <div className="border-r-2 px-4 my-4">
-                        <p className="font-bold">Check In</p>
-                        <input type="date" className="focus:outline-none " />
-                    </div>
-                    <div className="px-4 my-4">
-                        <p className="font-bold">Check Out</p>
-                        <input type="date" className="focus:outline-none " />
-                    </div>
-
-                    <button type="submit" className=" bg-blue-500 hover:bg-blue-800 py-2 px-4  transition-all">
-                        <IoMdSearch className="size-7 fill-white" />
-                    </button>
-                </form>
-            </div>
-
             <div className="h-max flex flex-col space-y-20 items-center p-10">
                 <p className=" font-bold text-4xl text-center text-orange-500">Kenapa Memilih Kami</p>
 

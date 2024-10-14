@@ -9,27 +9,27 @@ import { FaTrash, FaPenAlt, FaPlus } from "react-icons/fa";
 import { revalidatePath } from 'next/cache';
 import { MdCancel } from 'react-icons/md';
 import { useRouter } from 'next/router';
-import { deleteUser, editUser } from '@/app/api/user/[id]/route';
+import { deleteUser, editUser } from '@/app/api/user/route';
 
 interface userProps {
-    dataUser: any
+    user: Iuser[]
 }
 
-export default function Ui({ dataUser }: userProps) {
+export default function Ui({ user }: userProps) {
 
-    const [user, setUser] = useState<Iuser[]>()
     const [open, setOpen] = useState(false)
 
     const [Id_user, setId_user] = useState('')
     const [nama_user, setNama_user] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [foto, setFoto] = useState<File>()
     const [role, setRole] = useState('')
 
     const [submit, setSubmit] = useState('')
 
 
-    function handleEditForm ({id_user, nama_user, email, password, role} : any) {
+    function handleEdit ({id_user, nama_user, email, password, role} : any) {
         setId_user(id_user)
         setNama_user(nama_user)
         setEmail(email)
@@ -45,18 +45,42 @@ export default function Ui({ dataUser }: userProps) {
         setEmail('')
         setPassword('')
         setRole('')
+        setFoto(undefined)
 
         setSubmit('add')
     }
 
+    async function handleSubmit(e: React.FormEvent) {
+        
+        e.preventDefault()
+        const formData = new FormData()
 
-    function fetch() {
-        setUser(dataUser)
+        if (Id_user) {
+            formData.append('id_user', Id_user)
+        }
+        if (nama_user) {
+            formData.append('nama_user', nama_user)
+        }
+        if (email) {
+            formData.append('email', email)
+        }
+        if (password) {
+            formData.append('password', password)
+        }
+        if (foto) {
+            formData.append('foto', foto)
+        }
+        if (role) {
+            formData.append('role', role)
+        }
+
+        if (submit === 'add') {
+            await addUser(formData)
+        } else if (submit === 'edit') {
+            await editUser(formData)
+        }
     }
-    useEffect(() => {
 
-        fetch()
-    }, [user])
     return (
         <div>
             <div className='pt-28 p-10 flex flex-col space-y-5'>
@@ -103,7 +127,7 @@ export default function Ui({ dataUser }: userProps) {
                                 <td className=' p-2'>{item.role}</td>
                                 <td className=' flex space-x-5 p-2'>
                                     <button onClick={() => {
-                                        handleEditForm(item)
+                                        handleEdit(item)
                                         setOpen((prevstate) => !prevstate)
                                     }} className='p-2 bg-green-500 flex space-x-2 items-center hover:bg-green-700 rounded-xl'>
                                         <FaPenAlt className='fill-white' />
@@ -112,7 +136,6 @@ export default function Ui({ dataUser }: userProps) {
                                     <button onClick={async () => {
                                          if (confirm('Yakin ingin menghapus user ini?')) {
                                             await deleteUser(Number(item.id_user));
-                                            revalidatePath('/', 'layout')
                                         }
                                     }}
                                         className='p-2 bg-red-500 flex space-x-2 items-center hover:bg-red-700  rounded-xl'>
@@ -132,14 +155,14 @@ export default function Ui({ dataUser }: userProps) {
                         <button onClick={() => setOpen((prevstate) => !prevstate)}> <MdCancel className='fill-red-500 size-10' /></button>
                     </div>
                     <p className='text-center font-bold text-blue-500 text-3xl'>{submit === 'add'? "Tambah User":"Edit User" }</p>
-                    <form action={submit === 'add' ? addUser : editUser} className="flex  ">
+                    <form onSubmit={handleSubmit} className="flex  ">
                         <div className=" flex flex-col space-y-5">
                             <p className='hidden'>id</p>
                             <p className="p-1">Name:</p>
                             <p className="p-1">Email:</p>
                             <p className="p-1">Password:</p>
                             <p className="p-1">Role:</p>
-                            <p className="p-1">Foto(optional):</p>
+                            <p className="p-1">Foto (optional):</p>
                         </div>
                         <div className="flex flex-col space-y-5">
                             <input 
@@ -176,8 +199,10 @@ export default function Ui({ dataUser }: userProps) {
                                 name="role"
                                 className="focus:outline-blue-500  rounded-lg py-1 pl-3"
                                 required
+                                value={role}
+                                onChange={(e) => setRole(e.target.value)}
                             >
-                                <option value={role}>{role}</option>
+                                <option value=''></option>
                                 <option value='ADMIN'>Admin</option>
                                 <option value='RESEPSIONIS'>Resepsionis</option>
                                 <option value='TAMU'>Tamu</option>
@@ -185,6 +210,7 @@ export default function Ui({ dataUser }: userProps) {
                             <input
                                 type="file"
                                 name="foto"
+                                onChange={(e) => setFoto(e.target.files?.[0])}
                                 className="focus:outline-blue-500  rounded-lg py-1 pl-3"
                             />
                             <button type="submit" onClick={() => {

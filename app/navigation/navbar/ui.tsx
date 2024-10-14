@@ -17,7 +17,6 @@ interface navProps {
 
 export default function Ui({ session }: navProps) {
 
-    const [nav, setNav] = useState('')
     const [auth, setAuth] = useState(false)
     const [user, setUser] = useState<Iuser>()
     const [menu, setMenu] = useState(false)
@@ -63,9 +62,6 @@ export default function Ui({ session }: navProps) {
             } else {
 
                 setAuth(true)
-
-                setUser(data.data);
-
             }
         }
         fetchdata()
@@ -95,13 +91,13 @@ export default function Ui({ session }: navProps) {
                 {auth ?
                     <div>
                         <button onClick={handleMenu} className="flex space-x-2 items-center">
-                            {user?.foto === null ? 
+                            {session?.foto === null ? 
                                 <div className="p-3 bg-slate-200 rounded-full">
                                     <FaUserLarge className="size-5" />
                                 </div> 
                                 : 
-                                <img src={`/upload/user/${user?.foto}`} className="w-10 h-10 rounded-full" />}
-                            <p className="font-semibold text-xl">{user?.nama_user}</p>
+                                <img src={`/upload/user/${session?.foto}`} className="w-10 h-10 rounded-full" />}
+                            <p className="font-semibold text-xl">{session?.nama_user}</p>
                             <IoMdArrowDropdown className="size-5" />
                         </button>
                     </div>

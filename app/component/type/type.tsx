@@ -1,10 +1,10 @@
 export interface Iuser {
-    id_user?: number,
-    nama_user: string,
-    email: string,
-    foto: string,
-    password: string,
-    role: string,
+    id_user: number;
+    nama_user: string;
+    foto: string | null;
+    email: string;
+    password: string;
+    role: string;
 }
 
 export interface ITipekamar {
