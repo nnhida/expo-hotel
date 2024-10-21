@@ -8,6 +8,7 @@ import { redirect, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
 
 import { IoArrowBack } from "react-icons/io5";
+import { toast, Toaster } from 'sonner';
 
 interface pesanProps {
     dataTipeKamar: any
@@ -45,8 +46,6 @@ export default function Ui({ dataTipeKamar, dataKamar }: pesanProps) {
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault()
         const formData = new FormData();
-
-        alert('success')
         formData.append('id_tipe_kamar', id_tipe_kamar)
         formData.append('tgl_check_in', tgl_check_in)
         formData.append('tgl_check_out', Tgl_check_out)
@@ -67,7 +66,12 @@ export default function Ui({ dataTipeKamar, dataKamar }: pesanProps) {
         // }
 
        const result = await addPesanan(formData)
-       console.log(result)
+       if (result.error) {
+        toast.error(result.error)
+       } else {
+        toast.success(result.message)
+        router.push(String(result.redirect))
+       }
     }
 
     useEffect(() => {
@@ -92,6 +96,7 @@ export default function Ui({ dataTipeKamar, dataKamar }: pesanProps) {
 
     return (
         <div className='pt-28 p-10 flex flex-col items-center space-y-5'>
+            <Toaster richColors/>
             <div className='w-1/2'>
                 <button onClick={() => router.push('/pesanan')} className='p-2 bg-orange-500 rounded-xl'>
                     <IoArrowBack className='size-10 stroke-white'/>
@@ -109,7 +114,7 @@ export default function Ui({ dataTipeKamar, dataKamar }: pesanProps) {
                 <div className='flex flex-col space-y-5'>
                     <select name='id_tipe_kamar' value={id_tipe_kamar} onChange={async (e) => {
                         setId_tipe_kamar(e.target.value);
-                    }}>
+                    }} required>
                         <option>Pilih Tipe Kamar</option>
                         {tipekamar?.map((item) => (
                             <option value={item.id_tipe_kamar}>{item.nama_tipe_kamar}</option>
@@ -117,10 +122,10 @@ export default function Ui({ dataTipeKamar, dataKamar }: pesanProps) {
                     </select>
                     <input type='date' name='tgl_check_in' value={tgl_check_in} onChange={async (e) => {
                         setTgl_check_in(e.target.value)
-                    }} />
+                    }} required/>
                     <input type='date' name='tgl_check_out' value={Tgl_check_out} onChange={async (e) => {
                         setTgl_check_out(e.target.value)
-                    }} />
+                    }} required/>
 
                     <div className='grid gap-5 grid-cols-5'>
                         {kamar?.map((item) => (

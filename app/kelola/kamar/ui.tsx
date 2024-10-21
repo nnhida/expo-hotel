@@ -8,6 +8,7 @@ import { MdCancel } from 'react-icons/md';
 import { addKamar, deleteKamar, editKamar } from '@/app/api/kamar/routes';
 import Image from 'next/image';
 import { addTipeKamar, deleteTipeKamar, editTipeKamar } from '@/app/api/kamar/tipe_kamar/route';
+import { toast, Toaster } from 'sonner';
 
 interface kamarProps {
     kamar: IKamar[],
@@ -82,9 +83,19 @@ export default function Ui({ kamar, tipekamar }: kamarProps) {
             }
 
             if (submit === 'add') {
-                await addKamar(formData)
+                const data = await addKamar(formData)
+                if (data.error) {
+                    toast.error(data.error)
+                } else{
+                    toast.success(data.message)
+                }
             } else if (submit == 'edit') {
-                await editKamar(formData)
+                const data= await editKamar(formData)
+                if (data.error) {
+                    toast.error(data.error)
+                } else{
+                    toast.success(data.message)
+                }
             }
 
         } else if(tabel == 'tipe_kamar') {
@@ -105,9 +116,19 @@ export default function Ui({ kamar, tipekamar }: kamarProps) {
             }
 
             if (submit === 'add') {
-                await addTipeKamar(formData)
+                const data = await addTipeKamar(formData)
+                if (data.error) {
+                    toast.error(data.error)
+                } else{
+                    toast.success(data.message)
+                }
             } else if (submit == 'edit') {
-                await editTipeKamar(formData)
+                const data= await editTipeKamar(formData)
+                if (data.error) {
+                    toast.error(data.error)
+                } else{
+                    toast.success(data.message)
+                }
             }
         } // Call the function with form data
     };
@@ -136,6 +157,7 @@ export default function Ui({ kamar, tipekamar }: kamarProps) {
 
     return (
         <div>
+            <Toaster richColors/>
             <div className='pt-28 p-10 flex flex-col space-y-5'>
                 <p className='text-blue-500 text-center font-bold text-3xl'>Daftar Kamar dan Tipe Kamar</p>
                 <div className='flex w-full justify-between'>
@@ -194,7 +216,12 @@ export default function Ui({ kamar, tipekamar }: kamarProps) {
                                         </button>
                                         <button onClick={async () => {
                                             if (confirm('yakin ingin menghapus data ini')) {
-                                                await deleteKamar(Number(item.id_kamar))
+                                                const data = await deleteKamar(Number(item.id_kamar))
+                                                if(data.error){
+                                                    toast.error(data.error)
+                                                } else {
+                                                    toast.success(data.message)
+                                                }
                                             }
                                         }}
                                             className='p-2 bg-red-500 flex space-x-2 items-center hover:bg-red-700  rounded-xl'>
@@ -232,7 +259,12 @@ export default function Ui({ kamar, tipekamar }: kamarProps) {
                                         </button>
                                         <button onClick={async () => {
                                             if (confirm('yakin ingin menghapus data ini')) {
-                                                await deleteTipeKamar(Number(item.id_tipe_kamar))
+                                                const data= await deleteTipeKamar(Number(item.id_tipe_kamar))
+                                                if(data.error){
+                                                    toast.error(data.error)
+                                                } else {
+                                                    toast.success(data.message)
+                                                }
                                             }
                                         }}
                                             className='p-2 bg-red-500 flex space-x-2 items-center hover:bg-red-700  rounded-xl'>

@@ -10,6 +10,7 @@ import { Iuser } from "../../component/type/type";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { FaUserLarge } from "react-icons/fa6";
 import { usePathname } from "next/navigation";
+import { Toaster, toast } from 'sonner'
 
 interface navProps {
     session: any
@@ -32,7 +33,6 @@ export default function Ui({ session }: navProps) {
         }
     }
 
-    console.log(urlString)
 
     // function handleNav() {
 
@@ -70,6 +70,7 @@ export default function Ui({ session }: navProps) {
 
     return (
         <div className={`${urlString === '/login'? 'hidden' : ''} fixed z-50 w-full top-0`}>
+            <Toaster/>
             <div className='flex relative  z-20 items-center justify-between py-6 px-10 bg-white '>
                 <Image src={'/logo.png'} width={100} height={40} alt="logo" />
 
@@ -85,7 +86,7 @@ export default function Ui({ session }: navProps) {
                     <div className={`flex space-x-5 font-semibold text-xl`}>
                         <Link href={'/home'} className={`${urlString === '/home' ? 'border-b-2' : 'hover:border-b-2'} border-black transition-all`}>Beranda</Link>
                         <Link href={'/tipe_kamar'} className={`${urlString === '/tipeKamar' ? 'border-b-2' : 'hover:border-b-2'} border-black transition-all`}>Tipe Kamar</Link>
-                        <Link href={'/pesanan'} className={`${urlString === '/pesanan' ? 'border-b-2' : 'hover:border-b-2'} border-black transition-all`}>Pesanan</Link>
+                        <Link href={auth ? '/pesanan' : '/login'} className={`${urlString === '/pesanan' ? 'border-b-2' : 'hover:border-b-2'} border-black transition-all`}>Pesanan</Link>
                     </div>}
 
                 {auth ?

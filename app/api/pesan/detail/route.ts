@@ -14,6 +14,8 @@ export async function getDetailId(id: number) {
     } catch(err) {
         console.log('this is error : '+err)
         await prisma.$disconnect()
-        process.exit(1)
+        return {
+            error: "something wrong"
+        }
     }
 }

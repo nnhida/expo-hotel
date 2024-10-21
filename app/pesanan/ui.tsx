@@ -44,10 +44,10 @@ export default function Ui({dataPesanan}: pesananProps) {
         </thead>
 
         <tbody>
-          {dataPesanan?.map((item) => (
-            <tr>
+          {dataPesanan?.map((item, key) => (
+            <tr key={key}>
               <td className='text-xl font-bold p-2'>{item.nomor_pemesanan}</td>
-              <td className='text-xl font-bold p-2'>{item.tgl_pemesanan.getDate()+ '-' +item.tgl_pemesanan.getMonth()+'-'+item.tgl_pemesanan.getFullYear()}</td>
+              <td className='text-xl font-bold p-2'>{String(item.tgl_pemesanan)}</td>
               <td className='text-xl font-bold p-2'>{item.tgl_check_in.getDate()+ '-' +item.tgl_check_in.getMonth()+'-'+item.tgl_check_in.getFullYear()}</td>
               <td className='text-xl font-bold p-2'>{item.tgl_check_out.getDate()+ '-' +item.tgl_check_out.getMonth()+'-'+item.tgl_check_out.getFullYear()}</td>
               <td className='text-xl font-bold p-2'>{item.jumlah_kamar}</td>

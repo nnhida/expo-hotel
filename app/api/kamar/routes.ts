@@ -16,7 +16,9 @@ export async function getKamar() {
   } catch (err) {
     console.log("this is error :" + err);
     await prisma.$disconnect;
-    process.exit(1);
+    return {
+      error: "something wrong"
+    }
   }
 }
 export async function countKamar() {
@@ -30,6 +32,9 @@ export async function countKamar() {
   } catch (err) {
     console.log("this is error :" + err);
     await prisma.$disconnect();
+    return{
+      error: "something wrong"
+    }
   }
 }
 
@@ -73,6 +78,8 @@ export async function kamarAvailable(
 
     const id_pemesanan = Number(dataPesanan.map((item) => item.id_pemesanan));
 
+    if(!id_pemesanan) return;
+
     const nomorKamar = await prisma.detail_pemesanan.findMany({
       where: { id_pemesanan: id_pemesanan },
     });
@@ -83,6 +90,9 @@ export async function kamarAvailable(
   } catch (err) {
     console.log("this is error: " + err);
     await prisma.$disconnect();
+    return {
+       error: "something wrong"
+    }
   }
 }
 
@@ -93,10 +103,15 @@ export async function deleteKamar(id_kamar: number) {
     });
     revalidatePath("/", "layout");
     await prisma.$disconnect();
-    return data;
+    return {
+      message: "success delete kamar"
+    }
   } catch (err) {
     console.log("this is error " + err);
     await prisma.$disconnect();
+    return{
+      error: "something wrong"
+    }
   }
 }
 
@@ -115,10 +130,15 @@ export async function editKamar(formData: FormData) {
     });
     revalidatePath("/", "layout");
     await prisma.$disconnect();
-    return data;
+    return {
+      message: "success edit kamar"
+    }
   } catch (err) {
     console.log("this si error: " + err);
     await prisma.$disconnect();
+    return {
+      error: "something wrong"
+    }
   }
 }
 
@@ -136,9 +156,14 @@ export async function addKamar(formData: FormData) {
 
     revalidatePath("/", "layout");
     await prisma.$disconnect();
-    return data;
+    return {
+      message: "success add kamar"
+    };
   } catch (err) {
     console.log("this is error: " + err);
     await prisma.$disconnect();
+    return{
+      error: "something wrong"
+    }
   }
 }

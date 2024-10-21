@@ -85,8 +85,8 @@ export default function Ui({data}: pesananProps) {
             <tr>
               <td className='text-xl font-bold p-2'>{item.nomor_pemesanan}</td>
               <td className='text-xl font-bold p-2'>{String(item.tgl_pemesanan)}</td>
-              <td className='text-xl font-bold p-2'>{String(item.tgl_check_in)}</td>
-              <td className='text-xl font-bold p-2'>{String(item.tgl_check_out)}</td>
+              <td className='text-xl font-bold p-2'>{item.tgl_check_in.getDate()+" - "+item.tgl_check_in.getMonth()+" - "+item.tgl_check_in.getFullYear()}</td>
+              <td className='text-xl font-bold p-2'>{item.tgl_check_out.getDate()+" - "+item.tgl_check_out.getMonth()+" - "+item.tgl_check_out.getFullYear()}</td>
               <td className='text-xl font-bold p-2'>{item.jumlah_kamar}</td>
               <td className={` text-xl font-bold p-2`}>
                 <p className={`${bgStatus(item.status_pemesanan)} w-max p-2 rounded-xl text-white`}>{item.status_pemesanan}</p>

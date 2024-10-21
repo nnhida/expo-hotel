@@ -3,11 +3,13 @@
 import { prisma } from "@/lib/prisma";
 import Ui from "./ui";
 import { getTipeKamar } from "../api/kamar/tipe_kamar/route";
+import { getSession } from "@/lib/auth";
 
 export default async function Home() {
 
   const fetchKamar = await getTipeKamar()
+  const auth = await getSession()
   return (
-    <Ui dataTipeKamar={fetchKamar}/>
+    <Ui dataTipeKamar={fetchKamar} auth={auth}/>
   );
 }

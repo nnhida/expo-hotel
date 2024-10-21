@@ -10,18 +10,28 @@ import { RiCustomerService2Line } from "react-icons/ri";
 import CardRoom from "../component/cardRoom";
 import { ITipekamar } from "../component/type/type";
 import { useRouter } from "next/navigation";
+import { Toaster, toast } from "sonner";
 // import { fetchTipeKamar } from "./route";
 
 interface homeProps {
     dataTipeKamar: any
+    auth: any
 }
 
-export default function Ui({ dataTipeKamar }: homeProps) {
+export default function Ui({ dataTipeKamar, auth }: homeProps) {
 
     const [tipeKamar, setTipeKamar] = useState<any>()
 
     const router = useRouter()
 
+
+    function coba() {
+        if (!auth) {
+            toast.error("you must login first")
+        } else {
+            router.push('/pesanan/pesan')
+        }
+    }
 
     useEffect(() => {
 
@@ -41,6 +51,7 @@ export default function Ui({ dataTipeKamar }: homeProps) {
     }, [])
     return (
         <div className="pt-12">
+            <Toaster richColors/>
             <div className="flex m-10 pl-20 pt-32 h-[85vh] bg-cover rounded-xl" style={{
                 backgroundImage: "url('./hotelHome.jpg')"
             }}>
@@ -48,7 +59,7 @@ export default function Ui({ dataTipeKamar }: homeProps) {
                     <div className=" flex flex-col space-y-4">
                         <p className="font-bold text-6xl">Wikusama Hotel</p>
                         <p className="text-2xl w-3/5">Rasakan sensasi terbaik dari pelayanan hotel Wikusama Company yang dijamin tidak akan dilupakan</p>
-                        <button onClick={() => router.push('/pesanan/pesan')} className="p-2 bg-orange-500 hover:bg-orange-600 w-max rounded-full font-bold text-white">Pesan Sekarang</button>
+                        <button onClick={coba} className="p-2 bg-orange-500 hover:bg-orange-600 w-max rounded-full font-bold text-white">Pesan Sekarang</button>
                     </div>
 
                     {/* <div className="flex flex-col space-y-3 bg-white bg-opacity-70 p-3 rounded-xl w-max">
@@ -154,7 +165,7 @@ export default function Ui({ dataTipeKamar }: homeProps) {
 
                 <div className="flex space-x-5">
                     {tipeKamar?.map((item: ITipekamar) => (
-                        <CardRoom nama_tipe_kamar={item.nama_tipe_kamar} harga={item.harga} deskripsi={item.deskripsi} foto={item.foto} />
+                        <CardRoom nama_tipe_kamar={item.nama_tipe_kamar} harga={item.harga} deskripsi={item.deskripsi} foto={item.foto} auth={auth} />
                     ))}
                 </div>
 

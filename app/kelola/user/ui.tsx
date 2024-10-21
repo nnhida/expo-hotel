@@ -10,6 +10,7 @@ import { revalidatePath } from 'next/cache';
 import { MdCancel } from 'react-icons/md';
 import { useRouter } from 'next/router';
 import { deleteUser, editUser } from '@/app/api/user/route';
+import { toast, Toaster } from 'sonner';
 
 interface userProps {
     user: Iuser[]
@@ -75,15 +76,26 @@ export default function Ui({ user }: userProps) {
         }
 
         if (submit === 'add') {
-            await addUser(formData)
+            const data = await addUser(formData)
+            if (data.error){
+                toast.error(data.error)
+            } else{
+                toast.success(data.message)
+            }
         } else if (submit === 'edit') {
-            await editUser(formData)
+            const data = await editUser(formData)
+            if (data.error){
+                toast.error(data.error)
+            } else{
+                toast.success(data.message)
+            }
         }
     }
 
     return (
         <div>
             <div className='pt-28 p-10 flex flex-col space-y-5'>
+                <Toaster richColors/>
                 <p className='text-blue-500 text-center font-bold text-3xl'>Daftar User</p>
 
                 <div className='flex w-full justify-end'>
@@ -135,7 +147,12 @@ export default function Ui({ user }: userProps) {
                                     </button>
                                     <button onClick={async () => {
                                          if (confirm('Yakin ingin menghapus user ini?')) {
-                                            await deleteUser(Number(item.id_user));
+                                            const data = await deleteUser(Number(item.id_user));
+                                            if(data.error){
+                                                toast.error(data.error)
+                                            } else{
+                                                toast.success(data.message)
+                                            }
                                         }
                                     }}
                                         className='p-2 bg-red-500 flex space-x-2 items-center hover:bg-red-700  rounded-xl'>

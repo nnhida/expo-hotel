@@ -1,4 +1,4 @@
-'use server'
+"use server";
 
 import { Iuser } from "@/app/component/type/type";
 import { createSession, deleteSession, encrypt } from "@/lib/auth";
@@ -12,48 +12,83 @@ import { redirect } from "next/navigation";
 
 import { NextRequest, NextResponse } from "next/server";
 import path, { join } from "path";
+import { disconnect } from "process";
 import React from "react";
 
 export async function getAll() {
-  const data = await prisma.user.findMany();
-  revalidatePath("/", "layout");
-  await prisma.$disconnect();
-  return data;
+  try {
+    const data = await prisma.user.findMany();
+    revalidatePath("/", "layout");
+    await prisma.$disconnect();
+    return data;
+  } catch (err) {
+    console.log("this is error: " + err);
+    await prisma.$disconnect()
+    return {
+      error: "something wrong",
+    };
+  }
 }
 
 export async function countUser() {
-  const total = await prisma.user.count();
-  const admin = await prisma.user.count({ where: { role: "ADMIN" } });
-  const staff = await prisma.user.count({ where: { role: "RESEPSIONIS" } });
-  const tamu = await prisma.user.count({ where: { role: "TAMU" } });
+  try {
+    const total = await prisma.user.count();
+    const admin = await prisma.user.count({ where: { role: "ADMIN" } });
+    const staff = await prisma.user.count({ where: { role: "RESEPSIONIS" } });
+    const tamu = await prisma.user.count({ where: { role: "TAMU" } });
 
-  await prisma.$disconnect();
-  return { total, admin, staff, tamu };
+    await prisma.$disconnect();
+    return { total, admin, staff, tamu };
+  } catch (err) {
+    console.log("this is error: " + err);
+    await prisma.$disconnect()
+    return {
+      error: "something wrong",
+    };
+  }
 }
 
 export async function login(formData: FormData) {
-    const email = String(formData.get("email"));
-    const password = String(formData.get("password"));
+  try {
+    const email = formData.get("email");
+    const password = formData.get("password");
 
     const findUser = await prisma.user.findUnique({
       where: { email: email },
     });
     if (!findUser) {
-      return NextResponse.json({
-        success: false,
-        message: "akun tidak ditemukan",
-      });
+      return {
+        error: "akun tidak ditemukan",
+      };
     } else if (findUser) {
       if (email === findUser.email && password === findUser.password) {
         createSession(findUser);
 
         if (findUser.role === "ADMIN" || findUser.role === "RESEPSIONIS") {
-          redirect("/kelola");
+          return {
+            message: "success login",
+            redirect: "/kelola",
+          };
         } else {
-          redirect("/home");
+          return {
+            message: "success login",
+            redirect: "/home",
+          };
         }
+      } else {
+        return {
+          error: "email atau password salah",
+        };
       }
     }
+    await prisma.$disconnect()
+  } catch (err) {
+    console.log("this is error: " + err);
+    await prisma.$disconnect();
+    return {
+      error: "something wrong",
+    };
+  }
 }
 
 export async function logout() {
@@ -66,7 +101,7 @@ export async function register(formData: FormData) {
     const nama_user = String(formData.get("nama_user"));
     const email = String(formData.get("email"));
     const password = String(formData.get("password"));
-    const role = String(formData.get("role") || "TAMU");
+    const role = formData.get("role") || "TAMU";
 
     const validRoles = ["RESEPSIONIS", "ADMIN", "TAMU"];
 
@@ -79,9 +114,10 @@ export async function register(formData: FormData) {
     });
     if (filterEmail) {
       console.log("email terpakai");
+      return {
+        error: "email terpakai",
+      };
     }
-
-    const data = { nama_user, email, password, role };
 
     await prisma.user.create({
       data: {
@@ -93,13 +129,22 @@ export async function register(formData: FormData) {
       },
     });
 
+    const data = await prisma.user.findUnique({
+      where: { email: email },
+    });
+
     createSession(data);
     await prisma.$disconnect();
-    redirect("/");
+    return {
+      message: "succes register account",
+      redirect: "/home",
+    };
   } catch (err) {
     console.log("this is error :" + err);
     await prisma.$disconnect();
-    process.exit(1);
+    return {
+      error: "something wrong",
+    };
   }
 }
 
@@ -140,7 +185,9 @@ export async function addUser(formData: FormData) {
     });
     if (filterEmail) {
       console.log("Email already in use");
-      return; // Exit if email is already taken
+      return {
+        error: "Email already in use",
+      }; // Exit if email is already taken
     }
 
     console.log("Filename is " + filename);
@@ -156,13 +203,17 @@ export async function addUser(formData: FormData) {
       },
     });
 
-    revalidatePath('/','layout')
+    revalidatePath("/", "layout");
     await prisma.$disconnect();
-    return;
+    return {
+      message: "sucess add user",
+    };
   } catch (err) {
     console.log("this is error :" + err);
     await prisma.$disconnect();
-    process.exit(1);
+    return {
+      error: "something wrong",
+    };
   }
 }
 
@@ -176,7 +227,9 @@ export async function findUser(id: number) {
   } catch (err) {
     console.log("this is error :" + err);
     await prisma.$disconnect();
-    process.exit(1);
+    return {
+      error: "something wrong"
+    }
   }
 }
 
@@ -215,19 +268,23 @@ export async function editUser(formData: FormData) {
         nama_user,
         foto: filename,
         role,
-         email,
-         password,
+        email,
+        password,
       },
     });
 
     await prisma.$disconnect();
 
     revalidatePath("/", "layout");
-
-    return data;
+    return {
+      message: "success edit user"
+    }
   } catch (err) {
     await prisma.$disconnect();
     console.log("this is error :" + err);
+    return {
+      error: "something wrong"
+    }
   }
 }
 
@@ -238,11 +295,15 @@ export async function deleteUser(id: number) {
       where: { id_user: id },
     });
 
-    revalidatePath('/','layout')
-    return;
+    revalidatePath("/", "layout");
+    return {
+      message: "success delete user"
+    };
   } catch (err) {
     console.log("this is error :" + err);
     await prisma.$disconnect();
-    process.exit(1);
+    return {
+      error: "something wrong"
+    }
   }
 }

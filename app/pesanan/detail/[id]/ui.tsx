@@ -110,9 +110,9 @@ export default function Ui({ pemesanan, detail, kamar, tipeKamar }: detailProps)
                         <div className='flex flex-col space-y-2'>
                             <p>Hotel Wikusama</p>
                             <p>{pemesanan?.nama_pemesanan}</p>
-                            <p>{pemesanan?.tgl_pemesanan.getDate() + '-' + pemesanan?.tgl_pemesanan.getMonth() + '-' + pemesanan?.tgl_pemesanan.getFullYear()}</p>
-                            <p>{pemesanan?.tgl_check_in.getDate() + '-' + pemesanan?.tgl_check_in.getMonth() + '-' + pemesanan?.tgl_check_in.getFullYear()}</p>
-                            <p>{pemesanan?.tgl_check_out.getDate() + '-' + pemesanan?.tgl_check_out.getMonth() + '-' + pemesanan?.tgl_check_out.getFullYear()}</p>
+                            <p>{String(pemesanan?.tgl_pemesanan)}</p>
+                            <p>{String(pemesanan?.tgl_check_in)}</p>
+                            <p>{String(pemesanan?.tgl_check_out)}</p>
                             <p>{pemesanan?.nama_tamu}</p>
                             <p>{nomorKamar()}</p>
                             <p>{namaTipe(pemesanan?.id_tipe_kamar)}</p>
