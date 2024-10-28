@@ -96,7 +96,7 @@ export default function EditUser({ data }: editProps) {
               <p className='text-xl font-bold'>Password User</p>
               <p>{data?.password}</p>
             </div>
-            <button onClick={HandleEdit} className='p-2 bg-orange-500 rounded-lg hover:bg-orange-700'>
+            <button onClick={HandleEdit} className='p-2 bg-orange-500 rounded-lg hover:bg-orange-700 active:scale-75 transition-all'>
               <p className='text-xl font-semibold text-white'>Edit</p>
             </button>
           </div>
@@ -108,7 +108,7 @@ export default function EditUser({ data }: editProps) {
       <div className={`${open? 'scale-100 opacity-100': 'scale-0 opacity-0'} fixed z-[99] top-0 bg-black bg-opacity-40 h-screen w-screen flex justify-center items-center transition-all`}>
         <div className='flex flex-col space-y-5 items-center bg-white p-5 w-max rounded-xl'>
 
-          <button onClick={() => setOpen((prevstate) => !prevstate)} className='flex justify-end w-full '>
+          <button onClick={() => setOpen((prevstate) => !prevstate)} className='flex justify-end w-full active:scale-75 transition-all '>
             <MdCancel className='size-14 fill-red-500'/>
           </button>
             <p className='text-3xl font-bold text-blue-500'>Edit Profile</p>
@@ -128,7 +128,7 @@ export default function EditUser({ data }: editProps) {
                 <input type='password' name='password' value={password} onChange={(e) => setPassword(e.target.value)} className='border-2 border-blue-200 focus:outline-blue-500 p-1 rounded-lg'/>
                 <input type='file' name='foto' onChange={(e) => setFoto(e.target.files?.[0])} className='p-1'/>
 
-                <button type='submit' className='p-2 bg-blue-500 rounded-xl'> 
+                <button type='submit' className='p-2 bg-blue-500 rounded-xl active:scale-75 transition-all'> 
                   <p className='text-xl font-semibold text-white'>Edit Profile</p>
                 </button>
               </div>

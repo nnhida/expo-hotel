@@ -12,10 +12,11 @@ import { toast, Toaster } from 'sonner';
 
 interface kamarProps {
     kamar: IKamar[],
-    tipekamar: ITipekamar[]
+    tipekamar: ITipekamar[],
+    session: any
 }
 
-export default function Ui({ kamar, tipekamar }: kamarProps) {
+export default function Ui({ kamar, tipekamar, session }: kamarProps) {
 
 
 
@@ -169,7 +170,7 @@ export default function Ui({ kamar, tipekamar }: kamarProps) {
                         handleAdd()
                         setOpen((prevstate) => !prevstate)
                     }}
-                        className='flex space-x-2 items-center bg-orange-500 hover:bg-orange-700 rounded-xl p-2'>
+                        className={`${session?.data.role == 'ADMIN'? '' :'hidden'} flex space-x-2 items-center bg-orange-500 hover:bg-orange-700 rounded-xl p-2 active:scale-75 transition-all`}>
                         <FaPlus className='fill-white' />
                         <p className='font-semibold text-white'>Tambah</p>
                     </button>
@@ -181,7 +182,7 @@ export default function Ui({ kamar, tipekamar }: kamarProps) {
                                 <td className=' text-xl font-bold p-2'>Id Kamar</td>
                                 <td className=' text-xl font-bold p-2'>Nomor</td>
                                 <td className=' text-xl font-bold p-2'>tipe kamar</td>
-                                <td className=' text-xl font-bold p-2'>Action</td>
+                                <td className={` ${session?.data.role == 'ADMIN'? '' :'hidden'} text-xl font-bold p-2`}>Action</td>
                             </tr>
                             :
                             <tr className=' bg-slate-300'>
@@ -190,7 +191,7 @@ export default function Ui({ kamar, tipekamar }: kamarProps) {
                                 <td className=' text-xl font-bold p-2'>Deskripsi</td>
                                 <td className=' text-xl font-bold p-2'>Foto</td>
                                 <td className=' text-xl font-bold p-2'>Harga</td>
-                                <td className=' text-xl font-bold p-2'>Action</td>
+                                <td className={` ${session?.data.role == 'ADMIN'? '' :'hidden'} text-xl font-bold p-2`}>Action</td>
                             </tr>
                         }
                     </thead>
@@ -206,11 +207,11 @@ export default function Ui({ kamar, tipekamar }: kamarProps) {
                                     <td className=' p-2'>
                                         <p className={`${warnaTipeKamar(item.id_tipe_kamar)} p-2 text-white rounded-xl text-center`}>{namaTipeKamar(item.id_tipe_kamar)}</p>
                                     </td>
-                                    <td className=' flex space-x-5 p-2'>
+                                    <td className={`${session?.data.role=='ADMIN'? '' :'hidden'} flex space-x-5 p-2`}>
                                         <button onClick={() => {
                                             handleEdit(item)
                                             setOpen((prevstate) => !prevstate)
-                                        }} className='p-2 bg-green-500 flex space-x-2 items-center hover:bg-green-700 rounded-xl'>
+                                        }} className='p-2 bg-green-500 flex space-x-2 items-center hover:bg-green-700 rounded-xl active:scale-75 transition-all'>
                                             <FaPenAlt className='fill-white' />
                                             <p className='font-semibold text-white'>Edit</p>
                                         </button>
@@ -224,7 +225,7 @@ export default function Ui({ kamar, tipekamar }: kamarProps) {
                                                 }
                                             }
                                         }}
-                                            className='p-2 bg-red-500 flex space-x-2 items-center hover:bg-red-700  rounded-xl'>
+                                            className='p-2 bg-red-500 flex space-x-2 items-center hover:bg-red-700  rounded-xl active:scale-75 transition-all'>
                                             <FaTrash className='fill-white' />
                                             <p className='font-semibold text-white'>Delete</p>
                                         </button>
@@ -249,11 +250,11 @@ export default function Ui({ kamar, tipekamar }: kamarProps) {
                                     <td className=' p-2'>
                                         <p>{item.harga}</p>
                                     </td>
-                                    <td className=' flex space-x-5 p-2'>
+                                    <td className={`${session?.data.role=='ADMIN'? '' :'hidden'} flex space-x-5 p-2`}>
                                         <button onClick={() => {
                                             handleEdit(item)
                                             setOpen((prevstate) => !prevstate)
-                                        }} className='p-2 bg-green-500 flex space-x-2 items-center hover:bg-green-700 rounded-xl'>
+                                        }} className='p-2 bg-green-500 flex space-x-2 items-center hover:bg-green-700 rounded-xl active:scale-75 transition-all'>
                                             <FaPenAlt className='fill-white' />
                                             <p className='font-semibold text-white'>Edit</p>
                                         </button>
@@ -267,7 +268,7 @@ export default function Ui({ kamar, tipekamar }: kamarProps) {
                                                 }
                                             }
                                         }}
-                                            className='p-2 bg-red-500 flex space-x-2 items-center hover:bg-red-700  rounded-xl'>
+                                            className='p-2 bg-red-500 flex space-x-2 items-center hover:bg-red-700  rounded-xl active:scale-75 transition-all'>
                                             <FaTrash className='fill-white' />
                                             <p className='font-semibold text-white'>Delete</p>
                                         </button>
@@ -282,7 +283,7 @@ export default function Ui({ kamar, tipekamar }: kamarProps) {
             <div className={`${open ? '' : 'hidden'} fixed z-[99] top-0 w-screen h-screen bg-black bg-opacity-40 flex items-center justify-center`}>
                 <div className=' flex flex-col space-y-5  p-5 rounded-xl bg-slate-200 '>
                     <div className='flex justify-end w-full'>
-                        <button onClick={() => setOpen((prevstate) => !prevstate)}> <MdCancel className='fill-red-500 size-10' /></button>
+                        <button className='active:scale-75 transition-all' onClick={() => setOpen((prevstate) => !prevstate)}> <MdCancel className='fill-red-500 size-10' /></button>
                     </div>
                     <p className='text-center font-bold text-blue-500 text-3xl'>{tabel == 'kamar' ? (submit === 'add' ? "Tambah Kamar" : "Edit Kamar") : (submit === 'add' ? "Tambah Tipe Kamar" : "Edit Tipe Kamar")}</p>
                     <form onSubmit={handleSubmit} className="flex  ">
@@ -331,7 +332,7 @@ export default function Ui({ kamar, tipekamar }: kamarProps) {
                                 <button type="submit" onClick={() => {
                                     setOpen((prevstate) => !prevstate)
                                 }}
-                                    className="bg-blue-500 p-2 rounded-xl text-white font-bold">{submit === 'add' ? "Tambah" : "Edit"}</button>
+                                    className="bg-blue-500 p-2 rounded-xl text-white font-bold active:scale-75 transition-all">{submit === 'add' ? "Tambah" : "Edit"}</button>
                             </div>
                             :
                             <div className="flex flex-col space-y-5">
@@ -375,7 +376,7 @@ export default function Ui({ kamar, tipekamar }: kamarProps) {
                                 <button type="submit" onClick={() => {
                                     setOpen((prevstate) => !prevstate)
                                 }}
-                                    className="bg-blue-500 p-2 rounded-xl text-white font-bold">{submit === 'add' ? "Tambah" : "Edit"}</button>
+                                    className="bg-blue-500 p-2 rounded-xl text-white font-bold active:scale-75 transition-all">{submit === 'add' ? "Tambah" : "Edit"}</button>
                             </div>
                         }
                     </form>

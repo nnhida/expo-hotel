@@ -13,13 +13,15 @@ import { toast, Toaster } from 'sonner';
 interface pesanProps {
     dataTipeKamar: any
     dataKamar: any
+    namaUser: any
 }
 
-export default function Ui({ dataTipeKamar, dataKamar }: pesanProps) {
+export default function Ui({ dataTipeKamar, dataKamar, namaUser }: pesanProps) {
 
     const [tipekamar, setTipeKamar] = useState<ITipekamar[]>()
 
     const [id_tipe_kamar, setId_tipe_kamar] = useState('')
+    const [nama_tamu, setNama_tamu] = useState('')
     const [tgl_check_in, setTgl_check_in] = useState<string>('')
     const [Tgl_check_out, setTgl_check_out] = useState<string>('')
     const [kamarPesan, setKamarPesan] = useState<Array<number> | undefined>()
@@ -49,6 +51,7 @@ export default function Ui({ dataTipeKamar, dataKamar }: pesanProps) {
         formData.append('id_tipe_kamar', id_tipe_kamar)
         formData.append('tgl_check_in', tgl_check_in)
         formData.append('tgl_check_out', Tgl_check_out)
+        formData.append('nama_tamu', nama_tamu)
         {kamarPesan?.forEach((item) => {
             formData.append('id_kamar', String(item)) // Convert item to string
             
@@ -78,6 +81,7 @@ export default function Ui({ dataTipeKamar, dataKamar }: pesanProps) {
         function fetch() {
             setTipeKamar(dataTipeKamar)
             setKamar(dataKamar)
+            setNama_tamu(namaUser)
         }
         fetch()
 
@@ -98,7 +102,7 @@ export default function Ui({ dataTipeKamar, dataKamar }: pesanProps) {
         <div className='pt-28 p-10 flex flex-col items-center space-y-5'>
             <Toaster richColors/>
             <div className='w-1/2'>
-                <button onClick={() => router.push('/pesanan')} className='p-2 bg-orange-500 rounded-xl'>
+                <button onClick={() => router.push('/pesanan')} className='p-2 bg-orange-500 rounded-xl active:scale-75 transition-all'>
                     <IoArrowBack className='size-10 stroke-white'/>
                 </button>
             </div>
@@ -106,6 +110,7 @@ export default function Ui({ dataTipeKamar, dataKamar }: pesanProps) {
             <form onSubmit={handleSubmit} className='flex space-x-5'>
                 <div className='flex flex-col space-y-5'>
                     <p>Tipe Kamar</p>
+                    <p>Nama Tamu: </p>
                     <p>Tanggal Check in: </p>
                     <p>Tanggal Check out: </p>
                     <p>kamar yang tersedia: </p>
@@ -120,6 +125,9 @@ export default function Ui({ dataTipeKamar, dataKamar }: pesanProps) {
                             <option value={item.id_tipe_kamar}>{item.nama_tipe_kamar}</option>
                         ))}
                     </select>
+                    <input type='text' name='nama_tamu' value={nama_tamu} onChange={async (e) => {
+                        setNama_tamu(e.target.value)
+                    }} required/>
                     <input type='date' name='tgl_check_in' value={tgl_check_in} onChange={async (e) => {
                         setTgl_check_in(e.target.value)
                     }} required/>
@@ -139,7 +147,7 @@ export default function Ui({ dataTipeKamar, dataKamar }: pesanProps) {
                     <button 
                         
                         type='submit' 
-                        className='p-2 rounded-xl bg-orange-500 font-semibold text-white hover:bg-orange-600'>
+                        className='p-2 rounded-xl bg-orange-500 font-semibold text-white hover:bg-orange-600 active:scale-75 transition-all'>
                             Submit
                     </button>
                 </div>

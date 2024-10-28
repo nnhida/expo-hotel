@@ -31,8 +31,8 @@ export default function CardRoom({nama_tipe_kamar,harga,foto,deskripsi, auth}:ca
                 <p className='text-lg text-white w-max p-1 rounded-xl bg-green-400 font-bold'>Rp. {harga}</p>
                 <p className='line-clamp-3'>{deskripsi}</p>
                 <div className='flex justify-around'>
-                <button onClick={coba} className='bg-orange-500 p-2 rounded-lg hover:bg-orange-700 text-white font-semibold'>Pesan</button>
-                <button onClick={() => router.push('/tipe_kamar')} className='bg-blue-500 p-2 rounded-lg hover:bg-blue-700 text-white font-semibold'>Detail</button>
+                <button onClick={coba} className='bg-orange-500 p-2 rounded-lg hover:bg-orange-700 text-white font-semibold active:scale-75 transition-all'>Pesan</button>
+                <button onClick={() => router.push('/tipe_kamar')} className='bg-blue-500 p-2 rounded-lg hover:bg-blue-700 text-white font-semibold active:scale-75 transition-all'>Detail</button>
                 </div>
             </div>
             

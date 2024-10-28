@@ -90,14 +90,14 @@ export default function Ui({ userData, kamarData }: KelolaProps) {
             </div>
           </div>
           <div className="flex items-center space-x-5 bg-slate-300 w-60 rounded-xl p-2">
-            <FaUserGear className="size-20" />
+            <FaBed className="size-20" />
             <div>
               <p className=" text-xl font-bold">Standar</p>
               <p className=" text-xl font-bold">{kamar?.standar}</p>
             </div>
           </div>
           <div className="flex items-center space-x-5 bg-slate-300 w-60 rounded-xl p-2">
-            <ImUserTie className="size-20" />
+            <FaBed className="size-20" />
             <div>
               <p className=" text-xl font-bold">Superior</p>
               <p className=" text-xl font-bold">{kamar?.superior}</p>

@@ -33,6 +33,21 @@ export default function Ui({ session }: navProps) {
         }
     }
 
+    const bgRole = (role: any) => {
+        if (role === 'ADMIN') {
+            return "bg-blue-500"
+        } else {
+            return "bg-orange-500"
+        }
+    }
+    // const bgRole = (role: any) => {
+    //     if (role === 'ADMIN') {
+    //         return "bg-blue-500"
+    //     } else {
+    //         return "bg-orange-500"
+    //     }
+    // }
+
 
     // function handleNav() {
 
@@ -92,6 +107,7 @@ export default function Ui({ session }: navProps) {
                 {auth ?
                     <div>
                         <button onClick={handleMenu} className="flex space-x-2 items-center">
+                            <p className={`${session?.role === 'TAMU'? 'hidden': ''} ${bgRole(session?.role)} px-1 rounded-md text-white `}>{(session?.role).toLowerCase()}</p>
                             {session?.foto === null ? 
                                 <div className="p-3 bg-slate-200 rounded-full">
                                     <FaUserLarge className="size-5" />

@@ -66,7 +66,7 @@ export default function Page() {
         
         <div className="flex flex-col items-center w-3/5 space-y-5 p-10">
           <div className="flex w-full justify-end">
-            <button onClick={() => router.push("/home")} className="bg-red-400 p-2 rounded-lg">
+            <button onClick={() => router.push("/home")} className="bg-red-400 p-2 rounded-lg active:scale-75 transition-all">
               <IoArrowBack className="size-5"/>
             </button>
           </div>
@@ -105,7 +105,7 @@ export default function Page() {
                   className="focus:outline-blue-500  rounded-lg py-1 pl-3"
                   required
                 />
-              <button type="submit" className="bg-blue-500 p-2 rounded-xl text-white font-bold">Register</button>
+              <button type="submit" className="bg-blue-500 p-2 rounded-xl text-white font-bold active:scale-75 transition-all">Register</button>
               </div>
             </form>
             :
@@ -129,7 +129,7 @@ export default function Page() {
                   className=" focus:outline-blue-500  rounded-lg py-1 pl-3"
                   required
                 />
-              <button type="submit" className="bg-blue-500 p-2 rounded-xl text-white font-bold">Login</button>
+              <button type="submit" className="bg-blue-500 p-2 rounded-xl text-white font-bold active:scale-75 transition-all">Login</button>
               </div>
             </form>
           }

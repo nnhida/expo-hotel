@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation';
 
 
 interface detailProps {
-    pemesanan: Ipesanan | null,
+    pemesanan: Ipesanan,
     detail: Idetail[],
     kamar: IKamar[] | undefined,
     tipeKamar: ITipekamar[],
@@ -76,7 +76,7 @@ export default function Ui({ pemesanan, detail, kamar, tipeKamar }: detailProps)
         <div className='pt-28 p-10 flex items-center flex-col space-y-5'>
             <div className='w-full'>
                 <button onClick={() => router.push('/pesanan')}>
-                    <MdCancel className='size-16 fill-red-500' />
+                    <MdCancel className='size-16 fill-red-500 active:scale-75 transition-all' />
                 </button>
             </div>
             <p className='text-center text-blue-500 font-bold text-3xl'>Detail pemesanan</p>
@@ -84,7 +84,7 @@ export default function Ui({ pemesanan, detail, kamar, tipeKamar }: detailProps)
                 <div className='p-5 flex flex-col space-y-10'>
                     <div className='flex justify-between'>
                         <Image src={'/logo.png'} width={150} height={40} alt="logo" />
-                        <button onClick={download} data-html2canvas-ignore className='p-2 bg-white flex space-x-2 items-center rounded-xl'>
+                        <button onClick={download} data-html2canvas-ignore className='p-2 bg-white flex space-x-2 items-center rounded-xl active:scale-75 transition-all'>
                             <IoMdDownload />
                             <p>Download</p>
                         </button>
@@ -110,9 +110,9 @@ export default function Ui({ pemesanan, detail, kamar, tipeKamar }: detailProps)
                         <div className='flex flex-col space-y-2'>
                             <p>Hotel Wikusama</p>
                             <p>{pemesanan?.nama_pemesanan}</p>
-                            <p>{String(pemesanan?.tgl_pemesanan)}</p>
-                            <p>{String(pemesanan?.tgl_check_in)}</p>
-                            <p>{String(pemesanan?.tgl_check_out)}</p>
+                            <p>{new Date(pemesanan?.tgl_pemesanan).toLocaleDateString()}</p>
+                            <p>{new Date(pemesanan?.tgl_check_in).toLocaleDateString()}</p>
+                            <p>{new Date(pemesanan?.tgl_check_out).toLocaleDateString()}</p>
                             <p>{pemesanan?.nama_tamu}</p>
                             <p>{nomorKamar()}</p>
                             <p>{namaTipe(pemesanan?.id_tipe_kamar)}</p>

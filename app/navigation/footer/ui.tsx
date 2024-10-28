@@ -6,7 +6,10 @@ import { IoLocationOutline } from "react-icons/io5";
 import { usePathname } from 'next/navigation';
 
 
-export default function Ui() {
+interface footProps {
+    session: any
+}
+export default function Ui({session}:footProps) {
 
     const urlString = usePathname()
     return (
@@ -19,7 +22,7 @@ export default function Ui() {
                         <p className=''>Jl.cobaBuatHotel no.02, Kec.Ukk, Kab.SMK </p>
                     </div>
                 </div>
-                <div className='flex space-x-10'>
+                <div className={`${session?.data.role === 'ADMIN' || session?.data.role === 'RESEPSIONIS'? 'hidden': ''} flex space-x-10`}>
                     <div className='flex flex-col space-y-2'>
                         <p className='font-bold'>Beranda</p>
                         <div className='flex flex-col'>
@@ -29,18 +32,17 @@ export default function Ui() {
                     </div>
                     
                     <div className='flex flex-col space-y-2'>
-                        <p className='font-bold'>Tipe Kamar (no link)</p>
+                        <p className='font-bold'>Tipe Kamar</p>
                         <div className='flex flex-col'>
-                            <Link href={'#fasilitas'} className='hover:underline'>Standar Room</Link>
-                            <Link href={'#tipeKamar'} className='hover:underline'>Superior Room</Link>
+                            <Link href={'/tipe_kamar'} className='hover:underline'>Standar Room</Link>
+                            <Link href={'/tipe_kamar'} className='hover:underline'>Superior Room</Link>
                         </div>
                     </div>
                     
                     <div className='flex flex-col space-y-2'>
                         <p className='font-bold'>Pesanan</p>
                         <div className='flex flex-col'>
-                            <Link href={'#fasilitas'} className='hover:underline'>Standar Room</Link>
-                            <Link href={'#tipeKamar'} className='hover:underline'>Superior Room</Link>
+                            <Link href={'/pesanan'} className='hover:underline'>Pesanan</Link>
                         </div>
                     </div>
                 </div>

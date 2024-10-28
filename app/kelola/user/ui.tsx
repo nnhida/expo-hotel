@@ -14,9 +14,10 @@ import { toast, Toaster } from 'sonner';
 
 interface userProps {
     user: Iuser[]
+    session: any
 }
 
-export default function Ui({ user }: userProps) {
+export default function Ui({ user, session }: userProps) {
 
     const [open, setOpen] = useState(false)
 
@@ -98,7 +99,7 @@ export default function Ui({ user }: userProps) {
                 <Toaster richColors/>
                 <p className='text-blue-500 text-center font-bold text-3xl'>Daftar User</p>
 
-                <div className='flex w-full justify-end'>
+                <div className={`${session?.data.role == 'ADMIN'? '' : 'hidden'} flex w-full justify-end`}>
                     <button onClick={() => {
                         handleAdd()
                         setOpen((prevstate) => !prevstate)
@@ -117,7 +118,7 @@ export default function Ui({ user }: userProps) {
                             <td className=' text-xl p-2'>Email</td>
                             <td className=' text-xl p-2'>Foto</td>
                             <td className=' text-xl p-2'>Role</td>
-                            <td className=' text-xl p-2'>Action</td>
+                            <td className={`${session?.data.role == 'ADMIN'? '' : 'hidden'} text-xl p-2`}>Action</td>
                         </tr>
                     </thead>
 
@@ -133,15 +134,15 @@ export default function Ui({ user }: userProps) {
                                     {item.foto === null? 
                                     <p>foto tidak tersedia</p> 
                                     : 
-                                    <Image src={`/upload/user/${item.foto}`} alt={`nama file = ` + item.foto} width={50} height={20} />
+                                    <Image src={`/upload/user/${item.foto}`} alt={`nama file = ` + item.foto} width={150} height={20} />
                                     }
                                 </td>
                                 <td className=' p-2'>{item.role}</td>
-                                <td className=' flex space-x-5 p-2'>
+                                <td className={`${session?.data.role == 'ADMIN'? '' : 'hidden'} flex space-x-5 p-2`}>
                                     <button onClick={() => {
                                         handleEdit(item)
                                         setOpen((prevstate) => !prevstate)
-                                    }} className='p-2 bg-green-500 flex space-x-2 items-center hover:bg-green-700 rounded-xl'>
+                                    }} className='p-2 bg-green-500 flex space-x-2 items-center hover:bg-green-700 rounded-xl active:scale-75 transition-all'>
                                         <FaPenAlt className='fill-white' />
                                         <p className='font-semibold text-white'>Edit</p>
                                     </button>
@@ -155,7 +156,7 @@ export default function Ui({ user }: userProps) {
                                             }
                                         }
                                     }}
-                                        className='p-2 bg-red-500 flex space-x-2 items-center hover:bg-red-700  rounded-xl'>
+                                        className='p-2 bg-red-500 flex space-x-2 items-center hover:bg-red-700  rounded-xl active:scale-75 transition-all'>
                                         <FaTrash className='fill-white' />
                                         <p className='font-semibold text-white'>Delete</p>
                                     </button>
@@ -169,7 +170,7 @@ export default function Ui({ user }: userProps) {
             <div className={`${open ? '' : 'hidden'} fixed z-[99] top-0 w-screen h-screen bg-black bg-opacity-40 flex items-center justify-center`}>
                 <div className=' flex flex-col space-y-5  p-5 rounded-xl bg-slate-200 '>
                     <div className='flex justify-end w-full'>
-                        <button onClick={() => setOpen((prevstate) => !prevstate)}> <MdCancel className='fill-red-500 size-10' /></button>
+                        <button className='active:scale-75 transition-all' onClick={() => setOpen((prevstate) => !prevstate)}> <MdCancel className='fill-red-500 size-10' /></button>
                     </div>
                     <p className='text-center font-bold text-blue-500 text-3xl'>{submit === 'add'? "Tambah User":"Edit User" }</p>
                     <form onSubmit={handleSubmit} className="flex  ">
@@ -233,7 +234,7 @@ export default function Ui({ user }: userProps) {
                             <button type="submit" onClick={() => {
                                 setOpen((prevstate) => !prevstate)
                                 }} 
-                                className="bg-blue-500 p-2 rounded-xl text-white font-bold">{submit === 'add'? "Tambah":"Edit" }</button>
+                                className="bg-blue-500 p-2 rounded-xl text-white font-bold active:scale-75 transition-all">{submit === 'add'? "Tambah":"Edit" }</button>
                         </div>
                     </form>
                 </div>

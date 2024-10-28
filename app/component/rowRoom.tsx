@@ -29,7 +29,7 @@ export default function RowRoom({nama_tipe_kamar, harga, deskripsi, foto, auth}:
             <p className='text-2xl font-bold'>{nama_tipe_kamar}</p>
             <p className='text-xl font-bold p-2 bg-green-500 w-max text-white rounded-xl'>Rp.{harga}</p>
             <p className=''>{deskripsi}</p>
-            <button onClick={coba} className='p-2 bg-orange-500 hover:bg-orange-600 font-bold text-white rounded-lg'>Pesan</button>
+            <button onClick={coba} className='p-2 bg-orange-500 hover:bg-orange-600 font-bold text-white rounded-lg active:scale-75 transition-all'>Pesan</button>
         </div>
     </div>
   )

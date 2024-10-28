@@ -59,33 +59,10 @@ export default function Ui({ dataTipeKamar, auth }: homeProps) {
                     <div className=" flex flex-col space-y-4">
                         <p className="font-bold text-6xl">Wikusama Hotel</p>
                         <p className="text-2xl w-3/5">Rasakan sensasi terbaik dari pelayanan hotel Wikusama Company yang dijamin tidak akan dilupakan</p>
-                        <button onClick={coba} className="p-2 bg-orange-500 hover:bg-orange-600 w-max rounded-full font-bold text-white">Pesan Sekarang</button>
+                        <button onClick={coba} className="p-2 bg-orange-500 hover:bg-orange-600 w-max rounded-full font-bold text-white active:scale-75 transition-all">Pesan Sekarang</button>
                     </div>
 
-                    {/* <div className="flex flex-col space-y-3 bg-white bg-opacity-70 p-3 rounded-xl w-max">
-            <p className="text-2xl font-bold">Pesan Sekarang</p>
-            <form  className="flex bg-white rounded-md overflow-hidden">
-              <div className="flex flex-col space-y-2 border-r-2 border-gray-200 p-2">
-                <p>Tipe Hotel</p>
-                <select className="focus:outline-none">
-                  <option>Standar</option>
-                  <option>Deluxe</option>
-                </select>
-              </div>
-              <div className="flex flex-col space-y-2 border-r-2 border-gray-200 p-2">
-                <p>Check In</p>
-                <input type="date" className="focus:outline-none"/>
-              </div>
-              <div className="flex flex-col space-y-2 p-2">
-                <p>Check Out</p>
-                <input type="date" className="focus:outline-none"/>
-              </div>
-
-              <button type="submit" className=" bg-blue-600 hover:bg-blue-800 p-2 transition-all">
-                <IoMdSearch className="size-7 fill-white"/>
-                </button>
-            </form>
-          </div> */}
+                    
                 </div>
             </div>
 

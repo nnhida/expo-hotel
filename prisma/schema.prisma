@@ -35,7 +35,7 @@ model pemesanan {
   nomor_pemesanan  Int                        @unique(map: "Pemesanan_nomor_pemesanan_key")
   nama_pemesanan   String                     @db.VarChar(100)
   email_pemesanan  String                     @db.VarChar(100)
-  tgl_pemesanan    DateTime                   @default(now()) @db.Timestamp(0)
+  tgl_pemesanan    DateTime                   @db.Timestamp()
   tgl_check_in     DateTime                   @db.Date
   tgl_check_out    DateTime                   @db.Date
   nama_tamu        String                     @db.VarChar(100)
