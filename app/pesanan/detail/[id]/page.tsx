@@ -11,8 +11,8 @@ export default async function page({params} : {params: { id: string}}) {
 
   const {id} = params
 
-  const pesanan = await getPesananId(Number(id))
-  const detail = await getDetailId(Number(id));
+  const pesanan = await getPesananId(String(id))
+  const detail = await getDetailId(String(id));
   const kamar = await getKamar()
   const tipe_kamar = await getTipeKamar()
   return (

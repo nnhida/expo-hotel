@@ -134,7 +134,7 @@ export default function Ui({ kamar, tipekamar, session }: kamarProps) {
         } // Call the function with form data
     };
 
-    const namaTipeKamar = (target: number) => {
+    const namaTipeKamar = (target: string) => {
         const data = tipekamar?.find(item => item.id_tipe_kamar == target)
         return data?.nama_tipe_kamar
     }
@@ -147,10 +147,10 @@ export default function Ui({ kamar, tipekamar, session }: kamarProps) {
         }
     }
 
-    const warnaTipeKamar= (id: number) => {
-        if (id === 1) {
+    const warnaTipeKamar= (id: string) => {
+        if (id === tipekamar[0].id_tipe_kamar) {
             return "bg-blue-500"
-        } else if (id === 2) {
+        } else if (id === tipekamar[1].id_tipe_kamar) {
             return "bg-orange-500"
         }
     }
@@ -217,7 +217,7 @@ export default function Ui({ kamar, tipekamar, session }: kamarProps) {
                                         </button>
                                         <button onClick={async () => {
                                             if (confirm('yakin ingin menghapus data ini')) {
-                                                const data = await deleteKamar(Number(item.id_kamar))
+                                                const data = await deleteKamar(String(item.id_kamar))
                                                 if(data.error){
                                                     toast.error(data.error)
                                                 } else {
@@ -260,7 +260,7 @@ export default function Ui({ kamar, tipekamar, session }: kamarProps) {
                                         </button>
                                         <button onClick={async () => {
                                             if (confirm('yakin ingin menghapus data ini')) {
-                                                const data= await deleteTipeKamar(Number(item.id_tipe_kamar))
+                                                const data= await deleteTipeKamar(String(item.id_tipe_kamar))
                                                 if(data.error){
                                                     toast.error(data.error)
                                                 } else {

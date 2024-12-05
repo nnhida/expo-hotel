@@ -11,18 +11,11 @@ import { findUser } from "@/app/api/user/route";
 export default async function Navbar() {
 
 
-    let datauser : any
-
     const session = await getSession()
-    if (session) {
-        const data = session?.data.id_user
-        const id = Number(data)
-        const user = await findUser(id)
-        datauser = user
-    }
+    const data = session?.data
         
 
     return (
-        <Ui session={datauser}/>
+        <Ui session={data}/>
     )
 }

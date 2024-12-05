@@ -126,7 +126,7 @@ export async function filterPesanan(formData: FormData) {
   }
 }
 
-export async function getPesananId(id: number) {
+export async function getPesananId(id: string) {
   try {
     const data = await prisma.pemesanan.findUnique({
       where: { id_pemesanan: id },
@@ -137,9 +137,6 @@ export async function getPesananId(id: number) {
   } catch (err) {
     console.log("this is error " + err);
     await prisma.$disconnect();
-    return {
-      error: "something wrong",
-    };
   }
 }
 
@@ -159,15 +156,12 @@ export async function getPesananUser() {
   } catch (err) {
     console.log("this is error " + err);
     await prisma.$disconnect();
-    return {
-      error: "something wrong",
-    };
   }
 }
 
 export async function addPesanan(formData: FormData) {
   try {
-    const id_tipe_kamar = Number(formData.get("id_tipe_kamar"));
+    const id_tipe_kamar = String(formData.get("id_tipe_kamar"));
     const nama_tamu = String(formData.get("nama_tamu"));
     const tgl_check_in = new Date(String(formData.get("tgl_check_in")));
     const tgl_check_out = new Date(String(formData.get("tgl_check_out")));
@@ -204,7 +198,7 @@ export async function addPesanan(formData: FormData) {
         await prisma.detail_pemesanan.create({
           data: {
             id_pemesanan: pemesanan.id_pemesanan,
-            id_kamar: Number(id_kamar[i]),
+            id_kamar: String(id_kamar[i]),
             tgl_akses: new Date().toISOString(),
             harga: total,
           },

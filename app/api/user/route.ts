@@ -3,6 +3,7 @@
 import { Iuser } from "@/app/component/type/type";
 import { createSession, deleteSession, encrypt } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { user_role } from "@prisma/client";
 import { writeFile } from "fs";
 import { request } from "https";
 import { revalidatePath } from "next/cache";
@@ -54,7 +55,7 @@ export async function login(formData: FormData) {
     const password = formData.get("password");
 
     const findUser = await prisma.user.findUnique({
-      where: { email: email },
+      where: { email: email as string },
     });
     if (!findUser) {
       return {
@@ -105,7 +106,7 @@ export async function register(formData: FormData) {
 
     const validRoles = ["RESEPSIONIS", "ADMIN", "TAMU"];
 
-    if (!validRoles.includes(role)) {
+    if (!validRoles.includes(role as user_role)) {
       console.log("role off limit");
     }
 
@@ -119,7 +120,7 @@ export async function register(formData: FormData) {
       };
     }
 
-    await prisma.user.create({
+    const data = await prisma.user.create({
       data: {
         nama_user,
         email,
@@ -127,10 +128,6 @@ export async function register(formData: FormData) {
         password,
         role: role as any,
       },
-    });
-
-    const data = await prisma.user.findUnique({
-      where: { email: email },
     });
 
     createSession(data);
@@ -158,7 +155,7 @@ export async function addUser(formData: FormData) {
 
     const validRoles = ["RESEPSIONIS", "ADMIN", "TAMU"];
 
-    if (!validRoles.includes(role)) {
+    if (!validRoles.includes(role as user_role)) {
       console.log("Role off limit");
     }
 
@@ -181,7 +178,7 @@ export async function addUser(formData: FormData) {
     }
 
     const filterEmail = await prisma.user.findUnique({
-      where: { email: email },
+      where: { email: email as string },
     });
     if (filterEmail) {
       console.log("Email already in use");
@@ -195,11 +192,11 @@ export async function addUser(formData: FormData) {
     // Create user in the database
     await prisma.user.create({
       data: {
-        nama_user,
-        email,
+        nama_user: nama_user as string,
+        email: email as string,
         foto: filename,
-        password,
-        role: role as any,
+        password: password as string,
+        role: role as user_role,
       },
     });
 
@@ -217,7 +214,7 @@ export async function addUser(formData: FormData) {
   }
 }
 
-export async function findUser(id: number) {
+export async function findUser(id: string) {
   try {
     const findUser = await prisma.user.findUnique({
       where: { id_user: id },
@@ -236,7 +233,7 @@ export async function findUser(id: number) {
 //editUser
 export async function editUser(formData: FormData) {
   try {
-    const id_user = Number(formData.get("id_user"));
+    const id_user = String(formData.get("id_user"));
     const nama_user = formData.get("nama_user") || undefined;
     const email = formData.get("email") || undefined;
     const foto = formData.get("foto") || undefined;
@@ -265,11 +262,11 @@ export async function editUser(formData: FormData) {
     const data = await prisma.user.update({
       where: { id_user: id_user },
       data: {
-        nama_user,
+        nama_user: nama_user as string,
         foto: filename,
-        role,
-        email,
-        password,
+        role:  role as user_role,
+        email: email as string,
+        password: password as string,
       },
     });
 
@@ -289,7 +286,7 @@ export async function editUser(formData: FormData) {
 }
 
 //deleteuser
-export async function deleteUser(id: number) {
+export async function deleteUser(id: string) {
   try {
     await prisma.user.delete({
       where: { id_user: id },

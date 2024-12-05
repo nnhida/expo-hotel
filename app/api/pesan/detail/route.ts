@@ -2,7 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 
-export async function getDetailId(id: number) {
+export async function getDetailId(id: string) {
     try{
 
         const data = await prisma.detail_pemesanan.findMany({
@@ -14,8 +14,5 @@ export async function getDetailId(id: number) {
     } catch(err) {
         console.log('this is error : '+err)
         await prisma.$disconnect()
-        return {
-            error: "something wrong"
-        }
     }
 }

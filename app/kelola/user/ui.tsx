@@ -148,7 +148,7 @@ export default function Ui({ user, session }: userProps) {
                                     </button>
                                     <button onClick={async () => {
                                          if (confirm('Yakin ingin menghapus user ini?')) {
-                                            const data = await deleteUser(Number(item.id_user));
+                                            const data = await deleteUser(String(item.id_user));
                                             if(data.error){
                                                 toast.error(data.error)
                                             } else{

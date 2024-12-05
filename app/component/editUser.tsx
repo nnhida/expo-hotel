@@ -8,7 +8,7 @@ import { FaUserLarge } from 'react-icons/fa6'
 import { editUser } from '../api/user/route';
 
 interface editProps {
-  data:  any
+  data:  Iuser | undefined
 }
 
 export default function EditUser({ data }: editProps) {
@@ -17,7 +17,7 @@ export default function EditUser({ data }: editProps) {
 
   const [open, setOpen] = useState(false)
 
-  const [id_user, setId_user] = useState()
+  const [id_user, setId_user] = useState<string>('')
   const [nama, setNama] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -51,23 +51,15 @@ export default function EditUser({ data }: editProps) {
   }
 
   function HandleEdit() {
-    setId_user(data?.id_user)
+    if(data !== undefined){
+      setId_user(data?.id_user)
     setNama(data?.nama_user)
     setEmail(data?.email)
     setPassword(data?.password)
 
     setOpen((prevstate) => !prevstate)
+    }
   }
-
-  useEffect(() => {
-    function fetch() {
-      setUser(data)
-    } 
-
-    fetch()
-
-
-  },[])
 
 
   return (

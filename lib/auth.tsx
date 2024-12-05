@@ -1,6 +1,6 @@
 'use server';
 
-import { Role } from "@prisma/client";
+import { user_role } from "@prisma/client";
 import { JWTPayload, jwtVerify, SignJWT } from "jose";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -22,7 +22,7 @@ export async function decrypt(session: string | undefined = '') {
     const { payload } = await jwtVerify(session, encodedKey, {
       algorithms: ['HS256'],
     })
-    return (payload as JWTPayload & { data: { id_user: number; nama_user: string; foto: string; email: string; password: string; role: Role } })
+    return (payload as JWTPayload & { data: { id_user: string; nama_user: string; foto: string; email: string; password: string; role: user_role } })
   } catch (error) {
     console.log('Failed to verify session: ' + error)
   }

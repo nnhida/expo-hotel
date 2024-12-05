@@ -8,10 +8,8 @@ import { findUser } from '../api/user/route'
 export default async function page() {
 
   const session = await getSession()
-  const data = session?.data.id_user
-  const id = Number(data)
-  const user = await findUser(id)
+  const data = session?.data
   return (
-    <EditUser data={user}/>
+    <EditUser data={data}/>
   )
 }

@@ -10,10 +10,10 @@ import { useRouter } from 'next/navigation';
 
 
 interface detailProps {
-    pemesanan: Ipesanan,
-    detail: Idetail[],
+    pemesanan: Ipesanan | undefined | null,
+    detail: Idetail[] | undefined,
     kamar: IKamar[] | undefined,
-    tipeKamar: ITipekamar[],
+    tipeKamar: ITipekamar[] | undefined,
 }
 
 export default function Ui({ pemesanan, detail, kamar, tipeKamar }: detailProps) {
@@ -23,7 +23,8 @@ export default function Ui({ pemesanan, detail, kamar, tipeKamar }: detailProps)
     const router = useRouter()
 
     const totalHarga = () => {
-        let harga = 0
+        if(detail !== undefined){
+            let harga = 0
         {
             detail.forEach((item) => {
                 harga += item.harga
@@ -31,26 +32,32 @@ export default function Ui({ pemesanan, detail, kamar, tipeKamar }: detailProps)
         }
 
         return harga
+        } else {
+            return 0
+        }
+        
     }
 
     const nomorKamar = () => {
-        let nomor: number[] = [];
+        if(detail !== undefined){
+            let nomor: number[] = [];
 
         detail.forEach((item) => {
-            let noKamar = kamar?.find((k) => k.id_kamar === item.id_kamar);
+            let noKamar = kamar?.find((k) => k.id_kamar == item.id_kamar);
             if (noKamar?.nomor_kamar) {
                 nomor.push(noKamar.nomor_kamar);
             }
         });
 
         return nomor.join(', '); // Join with a comma and space
+        }
     };
 
 
 
 
     const namaTipe = (id: any) => {
-        if (id != null) {
+        if (id != null && tipeKamar !== undefined) {
             const tipe = tipeKamar.find((item) => item.id_tipe_kamar === id)
 
             return tipe?.nama_tipe_kamar
@@ -110,9 +117,9 @@ export default function Ui({ pemesanan, detail, kamar, tipeKamar }: detailProps)
                         <div className='flex flex-col space-y-2'>
                             <p>Hotel Wikusama</p>
                             <p>{pemesanan?.nama_pemesanan}</p>
-                            <p>{new Date(pemesanan?.tgl_pemesanan).toLocaleDateString()}</p>
-                            <p>{new Date(pemesanan?.tgl_check_in).toLocaleDateString()}</p>
-                            <p>{new Date(pemesanan?.tgl_check_out).toLocaleDateString()}</p>
+                            <p>{new Date(pemesanan?.tgl_pemesanan!).toLocaleDateString()}</p>
+                            <p>{new Date(pemesanan?.tgl_check_in!).toLocaleDateString()}</p>
+                            <p>{new Date(pemesanan?.tgl_check_out!).toLocaleDateString()}</p>
                             <p>{pemesanan?.nama_tamu}</p>
                             <p>{nomorKamar()}</p>
                             <p>{namaTipe(pemesanan?.id_tipe_kamar)}</p>

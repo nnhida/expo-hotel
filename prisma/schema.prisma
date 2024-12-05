@@ -3,70 +3,64 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
 model detail_pemesanan {
-  id_detail_pemesanan Int       @id @default(autoincrement())
-  id_pemesanan        Int
-  id_kamar            Int
+  id_detail_pemesanan String  @id @default(auto()) @map("_id") @db.ObjectId
+  id_pemesanan        String @db.ObjectId
+  id_kamar            String @db.ObjectId
   tgl_akses           DateTime  @db.Date
   harga               Int
-  kamar               kamar     @relation(fields: [id_kamar], references: [id_kamar], map: "Detail_pemesanan_id_kamar_fkey")
-  pemesanan           pemesanan @relation(fields: [id_pemesanan], references: [id_pemesanan], map: "Detail_pemesanan_id_pemesanan_fkey")
+  kamar               kamar     @relation(fields: [id_kamar], references: [id_kamar])
+  pemesanan           pemesanan @relation(fields: [id_pemesanan], references: [id_pemesanan])
 
-  @@index([id_kamar], map: "Detail_pemesanan_id_kamar_fkey")
-  @@index([id_pemesanan], map: "Detail_pemesanan_id_pemesanan_key")
 }
 
 model kamar {
-  id_kamar         Int                @id @default(autoincrement())
+  id_kamar         String  @id @default(auto()) @map("_id") @db.ObjectId
   nomor_kamar      Int
-  id_tipe_kamar    Int
+  id_tipe_kamar    String @db.ObjectId
   detail_pemesanan detail_pemesanan[]
   tipe_kamar       tipe_kamar         @relation(fields: [id_tipe_kamar], references: [id_tipe_kamar])
-
-  @@index([id_tipe_kamar], map: "Kamar_id_tipe_kamar_key")
 }
 
 model pemesanan {
-  id_pemesanan     Int                        @id @default(autoincrement())
-  nomor_pemesanan  Int                        @unique(map: "Pemesanan_nomor_pemesanan_key")
-  nama_pemesanan   String                     @db.VarChar(100)
-  email_pemesanan  String                     @db.VarChar(100)
-  tgl_pemesanan    DateTime                   @db.Timestamp()
-  tgl_check_in     DateTime                   @db.Date
-  tgl_check_out    DateTime                   @db.Date
-  nama_tamu        String                     @db.VarChar(100)
+  id_pemesanan     String  @id @default(auto()) @map("_id") @db.ObjectId
+  nomor_pemesanan  Int                        @unique
+  nama_pemesanan   String                     
+  email_pemesanan  String                    
+  tgl_pemesanan    DateTime                   
+  tgl_check_in     DateTime                   
+  tgl_check_out    DateTime                   
+  nama_tamu        String                     
   jumlah_kamar     Int
-  id_tipe_kamar    Int
+  id_tipe_kamar    String @db.ObjectId
   status_pemesanan pemesanan_status_pemesanan @default(BARU)
-  id_user          Int
+  id_user          String @db.ObjectId
   detail_pemesanan detail_pemesanan[]
-  tipe_kamar       tipe_kamar                 @relation(fields: [id_tipe_kamar], references: [id_tipe_kamar], map: "Pemesanan_id_tipe_kamar_fkey")
-  user             user                       @relation(fields: [id_user], references: [id_user], map: "Pemesanan_id_user_fkey")
+  tipe_kamar       tipe_kamar                 @relation(fields: [id_tipe_kamar], references: [id_tipe_kamar])
+  user             user                       @relation(fields: [id_user], references: [id_user])
 
-  @@index([id_tipe_kamar], map: "Pemesanan_id_tipe_kamar_fkey")
-  @@index([id_user], map: "Pemesanan_id_user_fkey")
 }
 
 model tipe_kamar {
-  id_tipe_kamar   Int         @id @default(autoincrement())
-  nama_tipe_kamar String      @db.VarChar(100)
+  id_tipe_kamar   String  @id @default(auto()) @map("_id") @db.ObjectId
+  nama_tipe_kamar String      
   harga           Int
-  deskripsi       String      @db.Text
-  foto            String      @db.Text
+  deskripsi       String      
+  foto            String      
   kamar           kamar[]
   pemesanan       pemesanan[]
 }
 
 model user {
-  id_user   Int         @id @default(autoincrement())
-  nama_user String      @db.VarChar(100)
-  foto      String?     @db.Text
-  email     String      @unique(map: "User_email_key") @db.VarChar(100)
-  password  String      @db.Text
+  id_user   String  @id @default(auto()) @map("_id") @db.ObjectId
+  nama_user String      
+  foto      String?     
+  email     String      @unique
+  password  String      
   role      user_role   @default(TAMU)
   pemesanan pemesanan[]
 }

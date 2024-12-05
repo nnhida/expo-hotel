@@ -19,9 +19,6 @@ export async function getTipeKamar() {
   } catch (err) {
     console.log("this is error :" + err);
     await prisma.$disconnect;
-    return {
-      error: "something wrong",
-    };
   }
 }
 
@@ -53,10 +50,10 @@ export async function addTipeKamar(formData: FormData) {
 
     const data = await prisma.tipe_kamar.create({
       data: {
-        nama_tipe_kamar,
-        harga,
-        deskripsi,
-        foto: filename,
+        nama_tipe_kamar: nama_tipe_kamar as string,
+        harga: harga as number,
+        deskripsi: deskripsi as string,
+        foto: filename as string,
       },
     });
 
@@ -76,7 +73,7 @@ export async function addTipeKamar(formData: FormData) {
 
 export async function editTipeKamar(formData: FormData) {
   try {
-    const id_tipe_kamar = Number(formData.get("id_tipe_kamar"));
+    const id_tipe_kamar = String(formData.get("id_tipe_kamar"));
     const nama_tipe_kamar = formData.get("nama_tipe_kamar") || undefined;
     const harga = formData.get("harga")
       ? Number(formData.get("harga"))
@@ -111,10 +108,10 @@ export async function editTipeKamar(formData: FormData) {
     const data = await prisma.tipe_kamar.update({
       where: { id_tipe_kamar: id_tipe_kamar },
       data: {
-        nama_tipe_kamar: nama_tipe_kamar,
+        nama_tipe_kamar: nama_tipe_kamar as string,
         foto: filename,
         harga: harga,
-        deskripsi: deskripsi,
+        deskripsi: deskripsi as string,
       },
     });
 
@@ -132,7 +129,7 @@ export async function editTipeKamar(formData: FormData) {
   }
 }
 
-export async function deleteTipeKamar(id_tipe_kamar: number) {
+export async function deleteTipeKamar(id_tipe_kamar: string) {
   try {
     const data = await prisma.tipe_kamar.delete({
       where: { id_tipe_kamar: id_tipe_kamar },
@@ -152,7 +149,7 @@ export async function deleteTipeKamar(id_tipe_kamar: number) {
   }
 }
 
-export async function getTipeKamarId(id: number) {
+export async function getTipeKamarId(id: string) {
   try {
     const data = await prisma.tipe_kamar.findUnique({
       where: { id_tipe_kamar: id },

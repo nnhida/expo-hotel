@@ -2,7 +2,7 @@
 
 import { kamarAvailable } from '@/app/api/kamar/routes';
 import { addPesanan } from '@/app/api/pesan/route';
-import { IKamar, ITipekamar } from '@/app/component/type/type'
+import { IKamar, ITipekamar, Iuser } from '@/app/component/type/type'
 import Link from 'next/link';
 import { redirect, useRouter } from 'next/navigation'; 
 import React, { useEffect, useState } from 'react'
@@ -11,9 +11,9 @@ import { IoArrowBack } from "react-icons/io5";
 import { toast, Toaster } from 'sonner';
 
 interface pesanProps {
-    dataTipeKamar: any
-    dataKamar: any
-    namaUser: any
+    dataTipeKamar: ITipekamar[] | undefined
+    dataKamar: IKamar[] | undefined
+    namaUser: string | undefined
 }
 
 export default function Ui({ dataTipeKamar, dataKamar, namaUser }: pesanProps) {
@@ -24,12 +24,12 @@ export default function Ui({ dataTipeKamar, dataKamar, namaUser }: pesanProps) {
     const [nama_tamu, setNama_tamu] = useState('')
     const [tgl_check_in, setTgl_check_in] = useState<string>('')
     const [Tgl_check_out, setTgl_check_out] = useState<string>('')
-    const [kamarPesan, setKamarPesan] = useState<Array<number> | undefined>()
+    const [kamarPesan, setKamarPesan] = useState<Array<string> | undefined>()
 
 
 
     const [kamar, setKamar] = useState<IKamar[]>()
-    const [kamarAvail, setKamarAvail] = useState<number[]>([])
+    const [kamarAvail, setKamarAvail] = useState<string[]>([])
 
     const router = useRouter()
 
@@ -79,9 +79,9 @@ export default function Ui({ dataTipeKamar, dataKamar, namaUser }: pesanProps) {
 
     useEffect(() => {
         function fetch() {
-            setTipeKamar(dataTipeKamar)
-            setKamar(dataKamar)
-            setNama_tamu(namaUser)
+            if(dataTipeKamar !== undefined) setTipeKamar(dataTipeKamar)
+                if(dataKamar !== undefined)setKamar(dataKamar)
+            if(namaUser !== undefined)setNama_tamu(namaUser)
         }
         fetch()
 
@@ -92,7 +92,7 @@ export default function Ui({ dataTipeKamar, dataKamar, namaUser }: pesanProps) {
             setKamarPesan([])
           if (tgl_check_in && Tgl_check_out) {
             const available = await kamarAvailable(id_tipe_kamar, tgl_check_in, Tgl_check_out);
-            setKamarAvail(available);
+            if(available !== undefined && Array.isArray(available)) setKamarAvail(available);
           }
         };
         fetchKamarAvail();
@@ -138,7 +138,7 @@ export default function Ui({ dataTipeKamar, dataKamar, namaUser }: pesanProps) {
                     <div className='grid gap-5 grid-cols-5'>
                         {kamar?.map((item) => (
                             <div>
-                                <input id={JSON.stringify(item.id_kamar)} name='id_kamar' type='checkbox' onChange={() => submitKamar(item.id_kamar)} className='hidden peer' checked={kamarPesan?.includes(Number(item.id_kamar))} disabled={kamarAvail?.includes(item.id_kamar!) || item.id_tipe_kamar !== Number(id_tipe_kamar)} />
+                                <input id={JSON.stringify(item.id_kamar)} name='id_kamar' type='checkbox' onChange={() => submitKamar(item.id_kamar)} className='hidden peer' checked={kamarPesan?.includes(String(item.id_kamar))} disabled={kamarAvail?.includes(item.id_kamar!) || item.id_tipe_kamar !== String(id_tipe_kamar)} />
                                 <label htmlFor={JSON.stringify(item.id_kamar)} className={` py-2 px-3 rounded-lg peer-disabled:opacity-50 peer-checked:bg-green-400 peer-checked:shadow-2xl peer-checked:text-white bg-white font-semibold hover:cursor-pointer transition-all`}>{item.nomor_kamar}</label>
                             </div>
                         ))}

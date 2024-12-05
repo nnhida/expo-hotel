@@ -13,7 +13,7 @@ import { usePathname } from "next/navigation";
 import { Toaster, toast } from 'sonner'
 
 interface navProps {
-    session: any
+    session: Iuser | undefined
 }
 
 export default function Ui({ session }: navProps) {
@@ -107,7 +107,7 @@ export default function Ui({ session }: navProps) {
                 {auth ?
                     <div>
                         <button onClick={handleMenu} className="flex space-x-2 items-center">
-                            <p className={`${session?.role === 'TAMU'? 'hidden': ''} ${bgRole(session?.role)} px-1 rounded-md text-white `}>{(session?.role).toLowerCase()}</p>
+                            <p className={`${session !== undefined && session?.role === 'TAMU'? 'hidden': ''} ${bgRole(session?.role)} px-1 rounded-md text-white `}>{(session?.role!).toLowerCase()}</p>
                             {session?.foto === null ? 
                                 <div className="p-3 bg-slate-200 rounded-full">
                                     <FaUserLarge className="size-5" />

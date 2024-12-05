@@ -61,7 +61,7 @@ export default function Page() {
   return (
     <div className="flex items-center justify-center h-screen bg-blue-300">
       <Toaster richColors/>
-      <div className="flex justify-end bg-slate-100 rounded-3xl h-2/3 w-1/2 overflow-hidden shadow-xl ">
+      <div className="flex justify-end bg-slate-100 rounded-3xl w-1/2 shadow-xl overflow-hidde ">
         <div className=" w-2/5  bg-center  bg-cover  " style={{ backgroundImage: "url('./hotelRegis.jpg')" }} />
         
         <div className="flex flex-col items-center w-3/5 space-y-5 p-10">
