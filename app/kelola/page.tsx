@@ -3,8 +3,8 @@
 import { redirect } from 'next/navigation';
 import Ui from './ui'
 import { prisma } from '@/lib/prisma';
-import { countKamar } from '../api/kamar/routes';
-import { countUser } from '../api/user/route';
+import { countKamar } from '../api/kamar/kamar';
+import { countUser } from '../api/user/user';
 
 export default async function Page() {
 

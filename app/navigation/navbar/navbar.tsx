@@ -4,7 +4,7 @@ import { getSession } from "@/lib/auth";
 import Ui from "./ui";
 import { NextRequest } from "next/server";
 import { request } from "https";
-import { findUser } from "@/app/api/user/route";
+import { findUser } from "@/app/api/user/user";
 
 
 

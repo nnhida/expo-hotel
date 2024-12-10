@@ -25,9 +25,6 @@ export async function getAll() {
   } catch (err) {
     console.log("this is error: " + err);
     await prisma.$disconnect()
-    return {
-      error: "something wrong",
-    };
   }
 }
 
@@ -43,9 +40,6 @@ export async function countUser() {
   } catch (err) {
     console.log("this is error: " + err);
     await prisma.$disconnect()
-    return {
-      error: "something wrong",
-    };
   }
 }
 
@@ -162,7 +156,7 @@ export async function addUser(formData: FormData) {
     let filename; // Initialize filename
 
     // Check if file exists and is an instance of File
-    if (file) {
+    if (file instanceof File) {
       const bytes = await file.arrayBuffer();
       const buffer = Buffer.from(bytes);
 
@@ -224,9 +218,6 @@ export async function findUser(id: string) {
   } catch (err) {
     console.log("this is error :" + err);
     await prisma.$disconnect();
-    return {
-      error: "something wrong"
-    }
   }
 }
 
@@ -246,7 +237,7 @@ export async function editUser(formData: FormData) {
     console.log(role);
     console.log(password);
 
-    if (foto) {
+    if (foto instanceof File) {
       const bytes = await foto.arrayBuffer();
       const buffer = Buffer.from(bytes);
 

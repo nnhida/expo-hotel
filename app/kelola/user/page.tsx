@@ -1,7 +1,7 @@
 
 import React from 'react'
 import Ui from './ui'
-import { getAll } from '@/app/api/user/route'
+import { getAll } from '@/app/api/user/user'
 import { revalidatePath } from 'next/cache';
 import { getSession } from '@/lib/auth';
 

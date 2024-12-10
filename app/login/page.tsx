@@ -2,7 +2,7 @@
 
 
 import React, { useEffect, useState } from "react";
-import {login, register } from "../api/user/route";
+import {login, register } from "../api/user/user";
 import { redirect } from "next/navigation";
 import { useRouter } from "next/navigation";
 

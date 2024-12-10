@@ -2,7 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import Ui from "./ui";
-import { getTipeKamar } from "../api/kamar/tipe_kamar/route";
+import { getTipeKamar } from "../api/kamar/tipe_kamar/tipe_kamar";
 import { getSession } from "@/lib/auth";
 
 export default async function Home() {

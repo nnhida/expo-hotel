@@ -1,7 +1,7 @@
 'use client';
 
-import { kamarAvailable } from '@/app/api/kamar/routes';
-import { addPesanan } from '@/app/api/pesan/route';
+import { kamarAvailable } from '@/app/api/kamar/kamar';
+import { addPesanan } from '@/app/api/pesan/pesan';
 import { IKamar, ITipekamar, Iuser } from '@/app/component/type/type'
 import Link from 'next/link';
 import { redirect, useRouter } from 'next/navigation'; 

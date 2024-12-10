@@ -8,7 +8,7 @@ import { IoDocument } from "react-icons/io5";
 import { CgUnavailable } from 'react-icons/cg';
 
 interface pesananProps {
-  dataPesanan: Ipesanan[]
+  dataPesanan: Ipesanan[] | undefined
 }
 
 export default function Ui({ dataPesanan }: pesananProps) {

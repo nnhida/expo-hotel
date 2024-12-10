@@ -1,6 +1,6 @@
 'use client';
 
-import { addUser } from '@/app/api/user/route';
+import { addUser } from '@/app/api/user/user';
 import { Iuser } from '@/app/component/type/type';
 import Image from 'next/image';
 import React, { MouseEventHandler, useEffect, useState } from 'react'
@@ -9,11 +9,11 @@ import { FaTrash, FaPenAlt, FaPlus } from "react-icons/fa";
 import { revalidatePath } from 'next/cache';
 import { MdCancel } from 'react-icons/md';
 import { useRouter } from 'next/router';
-import { deleteUser, editUser } from '@/app/api/user/route';
+import { deleteUser, editUser } from '@/app/api/user/user';
 import { toast, Toaster } from 'sonner';
 
 interface userProps {
-    user: Iuser[]
+    user: Iuser[] | undefined,
     session: any
 }
 

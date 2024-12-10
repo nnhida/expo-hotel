@@ -3,7 +3,7 @@
 import React from 'react'
 import EditUser from '../component/editUser'
 import { getSession } from '@/lib/auth'
-import { findUser } from '../api/user/route'
+import { findUser } from '../api/user/user'
 
 export default async function page() {
 

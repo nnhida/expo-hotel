@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { BiLogOut } from "react-icons/bi";
-import { logout } from "../../api/user/route";
+import { logout } from "../../api/user/user";
 import { Iuser } from "../../component/type/type";
 
 import { IoMdArrowDropdown } from "react-icons/io";

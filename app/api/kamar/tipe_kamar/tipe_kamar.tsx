@@ -13,14 +13,15 @@ const prisma = new PrismaClient();
 export async function getTipeKamar() {
   try {
     const data = await prisma.tipe_kamar.findMany();
-
-    await prisma.$disconnect();
-    return data;
+    return data; // Return the fetched data
   } catch (err) {
-    console.log("this is error :" + err);
-    await prisma.$disconnect;
+    console.error("This is error:", err);
+    return []; // Return an empty array or an appropriate default
+  } finally {
+    await prisma.$disconnect();
   }
 }
+
 
 export async function addTipeKamar(formData: FormData) {
   try {
@@ -30,7 +31,7 @@ export async function addTipeKamar(formData: FormData) {
     const file = formData.get("foto");
 
     let filename = undefined;
-    if (file) {
+    if (file instanceof File) {
       try {
         const bytes = await file.arrayBuffer(); //success baecause type is file
         const buffer = Buffer.from(bytes);
@@ -85,7 +86,7 @@ export async function editTipeKamar(formData: FormData) {
 
     console.log(foto);
 
-    if (foto) {
+    if (foto instanceof File) {
       const buffer = await foto.arrayBuffer();
       const view = new Uint8Array(buffer);
 

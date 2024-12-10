@@ -20,8 +20,8 @@ interface KamarData {
 }
 
 interface KelolaProps {
-  userData: UserData;
-  kamarData: KamarData;
+  userData: UserData | undefined;
+  kamarData: KamarData | undefined;
 }
 
 

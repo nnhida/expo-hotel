@@ -120,9 +120,6 @@ export async function filterPesanan(formData: FormData) {
   } catch (err) {
     console.log("this is error :" + err);
     await prisma.$disconnect();
-    return {
-      error: "something wrong",
-    };
   }
 }
 

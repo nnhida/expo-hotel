@@ -5,14 +5,14 @@ import React, { useEffect, useState } from 'react'
 import { FaPlus, FaTrash } from 'react-icons/fa6';
 import { FaPenAlt } from 'react-icons/fa';
 import { MdCancel } from 'react-icons/md';
-import { addKamar, deleteKamar, editKamar } from '@/app/api/kamar/routes';
+import { addKamar, deleteKamar, editKamar } from '@/app/api/kamar/kamar';
 import Image from 'next/image';
-import { addTipeKamar, deleteTipeKamar, editTipeKamar } from '@/app/api/kamar/tipe_kamar/route';
+import { addTipeKamar, deleteTipeKamar, editTipeKamar } from '@/app/api/kamar/tipe_kamar/tipe_kamar';
 import { toast, Toaster } from 'sonner';
 
 interface kamarProps {
-    kamar: IKamar[],
-    tipekamar: ITipekamar[],
+    kamar: IKamar[] | undefined,
+    tipekamar: ITipekamar[] | undefined,
     session: any
 }
 
@@ -148,9 +148,9 @@ export default function Ui({ kamar, tipekamar, session }: kamarProps) {
     }
 
     const warnaTipeKamar= (id: string) => {
-        if (id === tipekamar[0].id_tipe_kamar) {
+        if (id === tipekamar![0].id_tipe_kamar) {
             return "bg-blue-500"
-        } else if (id === tipekamar[1].id_tipe_kamar) {
+        } else if (id === tipekamar![1].id_tipe_kamar) {
             return "bg-orange-500"
         }
     }

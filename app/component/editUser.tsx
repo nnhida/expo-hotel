@@ -5,15 +5,14 @@ import { Iuser } from './type/type'
 
 import { MdCancel } from "react-icons/md";
 import { FaUserLarge } from 'react-icons/fa6'
-import { editUser } from '../api/user/route';
+import { editUser } from '../api/user/user';
 
 interface editProps {
-  data:  Iuser | undefined
+  data:  Iuser | null | undefined
 }
 
 export default function EditUser({ data }: editProps) {
 
-  const [user, setUser] = useState<Iuser>()
 
   const [open, setOpen] = useState(false)
 
@@ -51,7 +50,7 @@ export default function EditUser({ data }: editProps) {
   }
 
   function HandleEdit() {
-    if(data !== undefined){
+    if(data !== null && data !== undefined){
       setId_user(data?.id_user)
     setNama(data?.nama_user)
     setEmail(data?.email)
